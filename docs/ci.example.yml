@@ -1,0 +1,32 @@
+# Example GitHub Actions workflow for this knowledge base.
+#
+# It lives here rather than in .github/workflows/ because pushing a workflow
+# file requires a token with the "Workflows" scope. To activate CI, copy this
+# file to .github/workflows/ci.yml (via the GitHub web UI, or a push from a
+# credential that has workflow permissions):
+#
+#     cp docs/ci.example.yml .github/workflows/ci.yml
+#
+# It runs the pytest suite and lints the committed KB on every push and PR.
+
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Run test suite
+        run: pytest
+      - name: Lint the committed knowledge base
+        run: python3 plugins/okf-knowledge-base/scripts/kb_lint.py

@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "platform": "Linux-6.18.5-x86_64-with-glibc2.39",
+    "python": "3.11.15",
+    "pwsh": "PowerShell 7.6.3",
+    "repeat": 5
+  },
+  "results": [
+    {
+      "size": 20,
+      "files": 37,
+      "bytes": 8793,
+      "ops": {
+        "lint": {
+          "python_ms": 74.9,
+          "python_min_ms": 45.3,
+          "powershell_ms": 1192.8,
+          "powershell_min_ms": 1107.9,
+          "parity": true
+        },
+        "search": {
+          "python_ms": 48.1,
+          "python_min_ms": 46.9,
+          "powershell_ms": 1271.9,
+          "powershell_min_ms": 1159.1,
+          "parity": true
+        },
+        "detect": {
+          "python_ms": 49.5,
+          "python_min_ms": 45.0,
+          "powershell_ms": 964.0,
+          "powershell_min_ms": 933.9,
+          "parity": true
+        },
+        "analyze": {
+          "python_ms": 47.7,
+          "python_min_ms": 47.0,
+          "powershell_ms": 1256.4,
+          "powershell_min_ms": 1209.9,
+          "parity": true
+        }
+      },
+      "scriptless_proxy": {
+        "pages_to_read": 37,
+        "bytes_to_read": 8793
+      }
+    },
+    {
+      "size": 200,
+      "files": 217,
+      "bytes": 71332,
+      "ops": {
+        "lint": {
+          "python_ms": 63.9,
+          "python_min_ms": 59.4,
+          "powershell_ms": 2085.1,
+          "powershell_min_ms": 1975.6,
+          "parity": true
+        },
+        "search": {
+          "python_ms": 77.7,
+          "python_min_ms": 69.4,
+          "powershell_ms": 2219.0,
+          "powershell_min_ms": 2174.2,
+          "parity": true
+        },
+        "detect": {
+          "python_ms": 43.7,
+          "python_min_ms": 41.7,
+          "powershell_ms": 851.0,
+          "powershell_min_ms": 813.3,
+          "parity": true
+        },
+        "analyze": {
+          "python_ms": 138.1,
+          "python_min_ms": 132.3,
+          "powershell_ms": 4632.9,
+          "powershell_min_ms": 4522.1,
+          "parity": true
+        }
+      },
+      "scriptless_proxy": {
+        "pages_to_read": 217,
+        "bytes_to_read": 71332
+      }
+    },
+    {
+      "size": 1000,
+      "files": 1017,
+      "bytes": 354158,
+      "ops": {
+        "lint": {
+          "python_ms": 135.4,
+          "python_min_ms": 93.9,
+          "powershell_ms": 4677.8,
+          "powershell_min_ms": 4627.0,
+          "parity": true
+        },
+        "search": {
+          "python_ms": 163.9,
+          "python_min_ms": 162.5,
+          "powershell_ms": 5774.4,
+          "powershell_min_ms": 5261.6,
+          "parity": true
+        },
+        "detect": {
+          "python_ms": 41.7,
+          "python_min_ms": 40.5,
+          "powershell_ms": 784.0,
+          "powershell_min_ms": 750.5,
+          "parity": true
+        },
+        "analyze": {
+          "python_ms": 429.1,
+          "python_min_ms": 348.4,
+          "powershell_ms": 9512.1,
+          "powershell_min_ms": 8206.4,
+          "parity": true
+        }
+      },
+      "scriptless_proxy": {
+        "pages_to_read": 1017,
+        "bytes_to_read": 354158
+      }
+    }
+  ]
+}
