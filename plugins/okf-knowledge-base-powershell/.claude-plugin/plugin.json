@@ -1,0 +1,22 @@
+{
+  "name": "okf-knowledge-base-powershell",
+  "displayName": "OKF Knowledge Base (PowerShell)",
+  "version": "0.1.0",
+  "description": "Agent-operated knowledge base on the Open Knowledge Format, run as a Karpathy-style LLM wiki — the PowerShell edition of okf-knowledge-base. The skills call bundled PowerShell (pwsh) scripts for deterministic domain routing, ranked search, and linting, with autodetection of the KB in the working directory. Behaviour and JSON output are identical to the Python variant. Includes a knowledge-curator agent and a SessionStart detector hook. Requires PowerShell 7+ (pwsh). Install this OR another okf-knowledge-base variant, not both (they share skill names).",
+  "author": {
+    "name": "kb-research"
+  },
+  "homepage": "https://github.com/CoderNumber1/kb-research",
+  "repository": "https://github.com/CoderNumber1/kb-research",
+  "license": "MIT",
+  "keywords": [
+    "knowledge-base",
+    "okf",
+    "open-knowledge-format",
+    "llm-wiki",
+    "wiki",
+    "powershell",
+    "pwsh",
+    "agent"
+  ]
+}

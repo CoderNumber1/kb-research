@@ -135,10 +135,12 @@ def main() -> int:
 
     for t, paths in titles.items():
         if len(paths) > 1:
+            paths = sorted(paths)  # deterministic regardless of walk order
             findings.append(Finding("WARNING", "dup-title", paths[0],
                                     f"title {t!r} shared by: {', '.join(paths)}"))
     for res, paths in resources.items():
         if len(paths) > 1:
+            paths = sorted(paths)
             findings.append(Finding("WARNING", "dup-resource", paths[0],
                                 f"resource {res!r} shared by: {', '.join(paths)}"))
 

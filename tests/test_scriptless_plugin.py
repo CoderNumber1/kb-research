@@ -23,10 +23,11 @@ def test_manifest_valid():
     assert data.get("description")
 
 
-def test_marketplace_lists_both_plugins():
+def test_marketplace_lists_the_variants():
     mkt = json.loads((REPO_ROOT / ".claude-plugin" / "marketplace.json").read_text())
     names = {p["name"] for p in mkt["plugins"]}
-    assert names == {"okf-knowledge-base", "okf-knowledge-base-scriptless"}
+    assert {"okf-knowledge-base", "okf-knowledge-base-scriptless",
+            "okf-knowledge-base-powershell"} <= names
     for p in mkt["plugins"]:
         assert (REPO_ROOT / p["source"] / ".claude-plugin" / "plugin.json").exists()
 

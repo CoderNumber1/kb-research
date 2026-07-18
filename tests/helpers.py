@@ -11,8 +11,9 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PLUGIN_ROOT = REPO_ROOT / "plugins" / "okf-knowledge-base"            # scripts variant
+PLUGIN_ROOT = REPO_ROOT / "plugins" / "okf-knowledge-base"            # python scripts variant
 SCRIPTLESS_ROOT = REPO_ROOT / "plugins" / "okf-knowledge-base-scriptless"
+POWERSHELL_ROOT = REPO_ROOT / "plugins" / "okf-knowledge-base-powershell"
 SKILLS = PLUGIN_ROOT / "skills"
 AGENTS = PLUGIN_ROOT / "agents"
 REFERENCES = PLUGIN_ROOT / "references"

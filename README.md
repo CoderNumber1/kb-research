@@ -8,12 +8,12 @@ and run as a Karpathy-style
 compiled once into structured, cross-linked markdown pages so it **compounds**
 over time instead of being re-discovered on every query.
 
-The repo is a **marketplace** hosting **two variants of the plugin**, and it
+The repo is a **marketplace** hosting **three variants of the plugin**, and it
 dogfoods them against the example KB in `kb/`.
 
-## The two plugins
+## The three plugins
 
-Both give you the same four skills — `kb-init-domain`, `kb-ingest` (routes a
+All give you the same four skills — `kb-init-domain`, `kb-ingest` (routes a
 source to a domain by its description), `kb-search` (ranked, cited retrieval),
 `kb-lint` (OKF conformance + hygiene) — plus a `knowledge-curator` agent with an
 end-of-turn capture sweep and a `SessionStart` hook that detects a KB in the
@@ -21,20 +21,23 @@ working directory. They differ only in *how the work happens*:
 
 | Plugin | How it works | Dependencies |
 |--------|--------------|--------------|
-| **`okf-knowledge-base`** | skills call bundled pure-stdlib Python scripts (deterministic routing/ranking/lint, autodetected KB root) | Python 3 |
+| **`okf-knowledge-base`** | skills call bundled pure-stdlib Python scripts | Python 3 |
+| **`okf-knowledge-base-powershell`** | skills call bundled PowerShell scripts — output identical to the Python variant | PowerShell 7+ |
 | **`okf-knowledge-base-scriptless`** | skills instruct the agent to do the work directly with built-in file tools | none |
 
-Pick the scripts variant for large KBs, CI, and reproducible output; the
-scriptless variant for zero-setup use or environments without Python. **Install
-one or the other, not both** — they share skill names.
+Pick a scripts variant (Python or PowerShell — whichever runtime you have) for
+large KBs, CI, and reproducible output; the scriptless variant for zero-setup use
+or locked-down environments. **Install exactly one** — they share skill names.
+See [`benchmarks/`](benchmarks/) for a measured comparison.
 
 ## Install
 
 ```text
 /plugin marketplace add CoderNumber1/kb-research
-/plugin install okf-knowledge-base@kb-research              # scripts variant
-# ...or:
-/plugin install okf-knowledge-base-scriptless@kb-research   # scriptless variant
+/plugin install okf-knowledge-base@kb-research               # Python scripts
+# ...or one of:
+/plugin install okf-knowledge-base-powershell@kb-research    # PowerShell scripts
+/plugin install okf-knowledge-base-scriptless@kb-research    # no scripts
 ```
 
 Then, in any project that has (or should have) a `kb/` bundle, ask naturally
@@ -55,12 +58,16 @@ kb-research/
 │   │   ├── hooks/hooks.json            # SessionStart KB detector (kb_detect.py)
 │   │   ├── scripts/                    # kb_common, init/detect/search/lint, kb_detect
 │   │   └── references/{okf-spec.md,llm-wiki.md}
+│   ├── okf-knowledge-base-powershell/  # PowerShell variant
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── skills/… agents/… references/…
+│   │   ├── hooks/hooks.json            # SessionStart detector (kb_detect.ps1)
+│   │   └── scripts/                    # KbCommon.psm1 + *.ps1 (parity with Python)
 │   └── okf-knowledge-base-scriptless/  # scriptless variant (no scripts/)
 │       ├── .claude-plugin/plugin.json
-│       ├── skills/{kb-init-domain,kb-ingest,kb-search,kb-lint}/SKILL.md
-│       ├── agents/knowledge-curator.md
-│       ├── hooks/hooks.json            # SessionStart detector (inline shell)
-│       └── references/{okf-spec.md,llm-wiki.md}
+│       ├── skills/… agents/… references/…
+│       └── hooks/hooks.json            # SessionStart detector (inline shell)
+├── benchmarks/                         # cross-variant benchmark harness + results
 ├── kb/                                 # example / dogfood KB (one OKF bundle)
 │   ├── index.md                        # root catalog of domains (okf_version)
 │   ├── log.md
@@ -99,8 +106,12 @@ Under the installed plugin the skills call these via `${CLAUDE_PLUGIN_ROOT}`.
 
 ```bash
 pip install -r requirements-dev.txt
-pytest                                # 60 tests: scripts, skills, agent, plugin
+pytest                                # scripts, skills, agents, all three plugins
+python3 benchmarks/run_benchmarks.py  # Python vs PowerShell timings + parity
 ```
+
+The PowerShell parity tests run only where `pwsh` is installed and skip otherwise
+(GitHub's `ubuntu-latest` runners have PowerShell preinstalled).
 
 CI: copy `docs/ci.example.yml` to `.github/workflows/ci.yml` (kept out of the repo
 history because pushing workflow files needs a token with the Workflows scope).

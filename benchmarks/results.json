@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "platform": "Linux-6.18.5-x86_64-with-glibc2.39",
+    "python": "3.11.15",
+    "pwsh": "PowerShell 7.6.3",
+    "repeat": 5
+  },
+  "results": [
+    {
+      "size": 20,
+      "files": 37,
+      "bytes": 8193,
+      "ops": {
+        "lint": {
+          "python_ms": 45.4,
+          "python_min_ms": 42.3,
+          "powershell_ms": 914.2,
+          "powershell_min_ms": 885.1,
+          "parity": true
+        },
+        "search": {
+          "python_ms": 39.6,
+          "python_min_ms": 39.3,
+          "powershell_ms": 947.9,
+          "powershell_min_ms": 912.9,
+          "parity": true
+        },
+        "detect": {
+          "python_ms": 37.3,
+          "python_min_ms": 35.6,
+          "powershell_ms": 816.7,
+          "powershell_min_ms": 806.0,
+          "parity": true
+        }
+      },
+      "scriptless_proxy": {
+        "pages_to_read": 37,
+        "bytes_to_read": 8193
+      }
+    },
+    {
+      "size": 200,
+      "files": 217,
+      "bytes": 65032,
+      "ops": {
+        "lint": {
+          "python_ms": 63.5,
+          "python_min_ms": 52.0,
+          "powershell_ms": 1728.1,
+          "powershell_min_ms": 1646.1,
+          "parity": true
+        },
+        "search": {
+          "python_ms": 63.7,
+          "python_min_ms": 59.9,
+          "powershell_ms": 2026.2,
+          "powershell_min_ms": 1951.9,
+          "parity": true
+        },
+        "detect": {
+          "python_ms": 42.5,
+          "python_min_ms": 40.4,
+          "powershell_ms": 841.4,
+          "powershell_min_ms": 818.3,
+          "parity": true
+        }
+      },
+      "scriptless_proxy": {
+        "pages_to_read": 217,
+        "bytes_to_read": 65032
+      }
+    },
+    {
+      "size": 1000,
+      "files": 1017,
+      "bytes": 321258,
+      "ops": {
+        "lint": {
+          "python_ms": 95.9,
+          "python_min_ms": 94.6,
+          "powershell_ms": 4783.8,
+          "powershell_min_ms": 4468.1,
+          "parity": true
+        },
+        "search": {
+          "python_ms": 167.4,
+          "python_min_ms": 152.1,
+          "powershell_ms": 5483.9,
+          "powershell_min_ms": 5064.9,
+          "parity": true
+        },
+        "detect": {
+          "python_ms": 40.9,
+          "python_min_ms": 37.2,
+          "powershell_ms": 817.7,
+          "powershell_min_ms": 774.6,
+          "parity": true
+        }
+      },
+      "scriptless_proxy": {
+        "pages_to_read": 1017,
+        "bytes_to_read": 321258
+      }
+    }
+  ]
+}

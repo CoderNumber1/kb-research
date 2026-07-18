@@ -123,7 +123,9 @@ def main() -> int:
             "matched_terms": matched,
             "snippet": snippet(body, raw_words),
         })
-    results.sort(key=lambda r: r["score"], reverse=True)
+    # Score descending, then path ascending — the path tiebreak keeps results
+    # deterministic across runs/filesystems (and matches the other variants).
+    results.sort(key=lambda r: (-r["score"], r["path"]))
     results = results[:args.limit]
 
     if args.json:

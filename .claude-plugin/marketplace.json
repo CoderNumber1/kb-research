@@ -19,9 +19,16 @@
     {
       "name": "okf-knowledge-base-scriptless",
       "source": "./plugins/okf-knowledge-base-scriptless",
-      "description": "Scriptless variant of okf-knowledge-base: the skills perform initialize/ingest/search/lint directly with built-in file tools — no helper scripts, no Python dependency. Install this OR okf-knowledge-base, not both (they share skill names).",
+      "description": "Scriptless variant of okf-knowledge-base: the skills perform initialize/ingest/search/lint directly with built-in file tools — no helper scripts, no Python dependency. Install this OR another okf-knowledge-base variant, not both (they share skill names).",
       "category": "knowledge",
       "keywords": ["knowledge-base", "okf", "llm-wiki", "wiki", "scriptless"]
+    },
+    {
+      "name": "okf-knowledge-base-powershell",
+      "source": "./plugins/okf-knowledge-base-powershell",
+      "description": "PowerShell edition of okf-knowledge-base: the skills call bundled pwsh scripts for deterministic routing/search/lint with output identical to the Python variant. Requires PowerShell 7+. Install this OR another okf-knowledge-base variant, not both (they share skill names).",
+      "category": "knowledge",
+      "keywords": ["knowledge-base", "okf", "llm-wiki", "wiki", "powershell"]
     }
   ]
 }

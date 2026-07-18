@@ -1,12 +1,13 @@
 # CLAUDE.md — Knowledge Base Operating Guide
 
 This repository packages an agent-operated knowledge base as reusable Claude Code
-**plugins** and dogfoods them against the example KB in `kb/`. There are two
-variants under `plugins/`: `okf-knowledge-base` (skills call bundled Python
-scripts) and `okf-knowledge-base-scriptless` (skills do the work with built-in
-file tools, no scripts). They share skill names — install one or the other. This
-guide describes the scripts variant's paths; the scriptless variant is identical
-in behavior. It follows the
+**plugins** and dogfoods them against the example KB in `kb/`. There are three
+variants under `plugins/`: `okf-knowledge-base` (bundled Python scripts),
+`okf-knowledge-base-powershell` (bundled PowerShell scripts, identical output),
+and `okf-knowledge-base-scriptless` (skills do the work with built-in file tools,
+no scripts). They share skill names — install one. `benchmarks/` compares them.
+This guide describes the Python variant's paths; the others behave identically.
+It follows the
 [Open Knowledge Format v0.1](plugins/okf-knowledge-base/references/okf-spec.md)
 (the file format) and Karpathy's
 [LLM-wiki pattern](plugins/okf-knowledge-base/references/llm-wiki.md) (the
