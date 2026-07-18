@@ -61,6 +61,21 @@ python3 .claude/skills/kb-search/scripts/kb_search.py "..."  # search
 python3 .claude/skills/kb-ingest/scripts/detect_domain.py --list   # list domains
 ```
 
+## Tests
+
+A pytest suite exercises the scripts (against throwaway temporary knowledge
+bases) and checks the skills/agent invariants and the committed bundle's
+conformance:
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+CI is provided as [`docs/ci.example.yml`](docs/ci.example.yml) — copy it to
+`.github/workflows/ci.yml` to run the suite and lint the KB on every push/PR
+(pushing a workflow file needs a token with the Workflows scope).
+
 ## Design references
 
 - Open Knowledge Format v0.1 — Google Cloud
