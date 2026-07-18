@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f kb/index.md ] || ls kb/*/domain.md >/dev/null 2>&1; then printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"An Open Knowledge Format knowledge base (kb/) is present in this project. Use the kb-init-domain, kb-ingest, kb-search, and kb-lint skills, or the knowledge-curator agent, to work with it, and capture durable new knowledge back into it before finishing.\"}}'; fi"
+          }
+        ]
+      }
+    ]
+  }
+}

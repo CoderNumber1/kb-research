@@ -1,0 +1,22 @@
+{
+  "name": "okf-knowledge-base-scriptless",
+  "displayName": "OKF Knowledge Base (Scriptless)",
+  "version": "0.1.0",
+  "description": "Agent-driven knowledge base on the Open Knowledge Format, run as a Karpathy-style LLM wiki — a scriptless variant of okf-knowledge-base. The skills perform initialize/ingest/search/lint directly with built-in file tools (Read, Grep, Glob, Write, Edit); no helper scripts and no Python dependency. Includes a knowledge-curator agent with an end-of-turn capture sweep and a SessionStart hook that detects a KB in the working directory. Install this OR okf-knowledge-base, not both (they share skill names).",
+  "author": {
+    "name": "kb-research"
+  },
+  "homepage": "https://github.com/CoderNumber1/kb-research",
+  "repository": "https://github.com/CoderNumber1/kb-research",
+  "license": "MIT",
+  "keywords": [
+    "knowledge-base",
+    "okf",
+    "open-knowledge-format",
+    "llm-wiki",
+    "wiki",
+    "scriptless",
+    "no-dependencies",
+    "agent"
+  ]
+}

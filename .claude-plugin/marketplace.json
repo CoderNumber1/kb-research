@@ -12,9 +12,16 @@
     {
       "name": "okf-knowledge-base",
       "source": "./plugins/okf-knowledge-base",
-      "description": "Agent-operated knowledge base on the Open Knowledge Format, run as a Karpathy-style LLM wiki: initialize domains, ingest sources (auto-routed by domain description), search, and lint — with a curator agent and a working-directory KB detector.",
+      "description": "Agent-operated knowledge base on the Open Knowledge Format, run as a Karpathy-style LLM wiki: initialize domains, ingest sources (auto-routed by domain description), search, and lint — with a curator agent and a working-directory KB detector. Uses bundled pure-stdlib Python scripts.",
       "category": "knowledge",
       "keywords": ["knowledge-base", "okf", "llm-wiki", "wiki", "ingest"]
+    },
+    {
+      "name": "okf-knowledge-base-scriptless",
+      "source": "./plugins/okf-knowledge-base-scriptless",
+      "description": "Scriptless variant of okf-knowledge-base: the skills perform initialize/ingest/search/lint directly with built-in file tools — no helper scripts, no Python dependency. Install this OR okf-knowledge-base, not both (they share skill names).",
+      "category": "knowledge",
+      "keywords": ["knowledge-base", "okf", "llm-wiki", "wiki", "scriptless"]
     }
   ]
 }

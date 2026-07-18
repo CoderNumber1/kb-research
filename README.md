@@ -8,26 +8,33 @@ and run as a Karpathy-style
 compiled once into structured, cross-linked markdown pages so it **compounds**
 over time instead of being re-discovered on every query.
 
-The repo is both the **plugin** (`plugins/okf-knowledge-base/`) and a one-plugin
-**marketplace**, and it dogfoods the plugin against the example KB in `kb/`.
+The repo is a **marketplace** hosting **two variants of the plugin**, and it
+dogfoods them against the example KB in `kb/`.
 
-## What the plugin gives you
+## The two plugins
 
-- **Four skills** — `kb-init-domain`, `kb-ingest` (auto-routes a source to a
-  domain by matching its description), `kb-search` (ranked, cited retrieval),
-  `kb-lint` (OKF conformance + wiki hygiene).
-- **A `knowledge-curator` agent** — operates the KB and runs an end-of-turn sweep
-  that captures durable knowledge discovered during the turn.
-- **Working-directory detection** — a `SessionStart` hook detects a KB in the
-  project you open and announces it (and its domains), so the tools light up only
-  where a KB exists. The scripts autodetect the `kb/` bundle, so no configuration
-  is needed.
+Both give you the same four skills — `kb-init-domain`, `kb-ingest` (routes a
+source to a domain by its description), `kb-search` (ranked, cited retrieval),
+`kb-lint` (OKF conformance + hygiene) — plus a `knowledge-curator` agent with an
+end-of-turn capture sweep and a `SessionStart` hook that detects a KB in the
+working directory. They differ only in *how the work happens*:
+
+| Plugin | How it works | Dependencies |
+|--------|--------------|--------------|
+| **`okf-knowledge-base`** | skills call bundled pure-stdlib Python scripts (deterministic routing/ranking/lint, autodetected KB root) | Python 3 |
+| **`okf-knowledge-base-scriptless`** | skills instruct the agent to do the work directly with built-in file tools | none |
+
+Pick the scripts variant for large KBs, CI, and reproducible output; the
+scriptless variant for zero-setup use or environments without Python. **Install
+one or the other, not both** — they share skill names.
 
 ## Install
 
 ```text
 /plugin marketplace add CoderNumber1/kb-research
-/plugin install okf-knowledge-base@kb-research
+/plugin install okf-knowledge-base@kb-research              # scripts variant
+# ...or:
+/plugin install okf-knowledge-base-scriptless@kb-research   # scriptless variant
 ```
 
 Then, in any project that has (or should have) a `kb/` bundle, ask naturally
@@ -39,14 +46,21 @@ created for you.
 
 ```
 kb-research/
-├── .claude-plugin/marketplace.json     # one-plugin marketplace
-├── plugins/okf-knowledge-base/         # the installable plugin
-│   ├── .claude-plugin/plugin.json
-│   ├── skills/{kb-init-domain,kb-ingest,kb-search,kb-lint}/SKILL.md
-│   ├── agents/knowledge-curator.md
-│   ├── hooks/hooks.json                # SessionStart KB detector
-│   ├── scripts/                        # kb_common, init/detect/search/lint, kb_detect
-│   └── references/{okf-spec.md,llm-wiki.md}
+├── .claude-plugin/marketplace.json     # marketplace listing both plugins
+├── plugins/
+│   ├── okf-knowledge-base/             # scripts variant
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── skills/{kb-init-domain,kb-ingest,kb-search,kb-lint}/SKILL.md
+│   │   ├── agents/knowledge-curator.md
+│   │   ├── hooks/hooks.json            # SessionStart KB detector (kb_detect.py)
+│   │   ├── scripts/                    # kb_common, init/detect/search/lint, kb_detect
+│   │   └── references/{okf-spec.md,llm-wiki.md}
+│   └── okf-knowledge-base-scriptless/  # scriptless variant (no scripts/)
+│       ├── .claude-plugin/plugin.json
+│       ├── skills/{kb-init-domain,kb-ingest,kb-search,kb-lint}/SKILL.md
+│       ├── agents/knowledge-curator.md
+│       ├── hooks/hooks.json            # SessionStart detector (inline shell)
+│       └── references/{okf-spec.md,llm-wiki.md}
 ├── kb/                                 # example / dogfood KB (one OKF bundle)
 │   ├── index.md                        # root catalog of domains (okf_version)
 │   ├── log.md
