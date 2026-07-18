@@ -11,10 +11,10 @@ import re
 
 import pytest
 
-from helpers import (AGENTS, REFERENCES, REPO_ROOT, SKILL_NAMES, SKILLS,
-                     extract_frontmatter, run)
+from helpers import (AGENTS, REFERENCES, REPO_ROOT, SCRIPTS_DIR, SKILL_NAMES,
+                     SKILLS, extract_frontmatter, run)
 
-SCRIPT_REF = re.compile(r"\.claude/skills/[A-Za-z0-9_./-]+\.py")
+SCRIPT_REF = re.compile(r"\$\{CLAUDE_PLUGIN_ROOT\}/scripts/(\w+\.py)")
 
 
 def test_expected_skills_present():
@@ -33,8 +33,11 @@ def test_skill_frontmatter_valid(skill):
 @pytest.mark.parametrize("skill", SKILL_NAMES)
 def test_skill_referenced_scripts_exist(skill):
     text = (SKILLS / skill / "SKILL.md").read_text()
-    for ref in SCRIPT_REF.findall(text):
-        assert (REPO_ROOT / ref).exists(), f"{skill} references missing script {ref}"
+    refs = SCRIPT_REF.findall(text)
+    assert refs, f"{skill} should reference at least one plugin script"
+    for script in refs:
+        assert (SCRIPTS_DIR / script).exists(), \
+            f"{skill} references missing script {script}"
 
 
 def test_all_scripts_run_help_cleanly():

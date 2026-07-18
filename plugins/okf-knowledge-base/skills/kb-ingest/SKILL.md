@@ -18,7 +18,7 @@ description: >-
 Ingestion is the core write operation of the LLM wiki: take raw material, snapshot
 it immutably for provenance, then **distill** it into structured, cross-linked
 concept pages so future work reads the compiled knowledge instead of
-re-discovering it. Read `references/okf-spec.md` and `references/llm-wiki.md` if
+re-discovering it. Read `${CLAUDE_PLUGIN_ROOT}/references/okf-spec.md` and `${CLAUDE_PLUGIN_ROOT}/references/llm-wiki.md` if
 you need the model.
 
 The guiding principle is **compounding**: prefer updating existing pages and
@@ -43,7 +43,7 @@ Distill the source to its key topic terms (title, named systems/entities,
 keywords), then rank domains:
 
 ```bash
-python3 .claude/skills/kb-ingest/scripts/detect_domain.py \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/detect_domain.py" \
   --query "stripe webhook signature verification hmac retry" --json
 ```
 
@@ -97,7 +97,7 @@ Knowledge compounds only if you extend what exists. **First search** the domain
 for pages the source touches:
 
 ```bash
-python3 .claude/skills/kb-search/scripts/kb_search.py "<key concept>" --domain <domain>
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_search.py" "<key concept>" --domain <domain>
 ```
 
 Then, for each durable concept the source establishes:
@@ -137,7 +137,7 @@ Guidelines:
 ### 5. Update index and log
 
 - Add new concept pages to `kb/<domain>/index.md` (title + description), or run
-  `python3 .claude/skills/kb-lint/scripts/kb_lint.py --domain <domain> --fix-index`
+  `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_lint.py" --domain <domain> --fix-index`
   to regenerate the concept list.
 - Prepend a dated entry to `kb/<domain>/log.md` (newest first, ISO date):
 
@@ -152,7 +152,7 @@ Guidelines:
 Run a scoped lint and fix easy issues:
 
 ```bash
-python3 .claude/skills/kb-lint/scripts/kb_lint.py --domain <domain>
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_lint.py" --domain <domain>
 ```
 
 Then tell the user, concisely: which domain received it, which pages were created

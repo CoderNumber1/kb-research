@@ -1,88 +1,101 @@
 # kb-research
 
-An agent-operated knowledge base built on the
-[Open Knowledge Format (OKF) v0.1](references/okf-spec.md) and run as a
-Karpathy-style [LLM wiki](references/llm-wiki.md): knowledge is compiled once into
-structured, cross-linked markdown pages so it **compounds** over time instead of
-being re-discovered on every query.
+A reusable **Claude Code plugin** that turns any project into an agent-operated
+knowledge base, built on the
+[Open Knowledge Format (OKF) v0.1](plugins/okf-knowledge-base/references/okf-spec.md)
+and run as a Karpathy-style
+[LLM wiki](plugins/okf-knowledge-base/references/llm-wiki.md): knowledge is
+compiled once into structured, cross-linked markdown pages so it **compounds**
+over time instead of being re-discovered on every query.
+
+The repo is both the **plugin** (`plugins/okf-knowledge-base/`) and a one-plugin
+**marketplace**, and it dogfoods the plugin against the example KB in `kb/`.
+
+## What the plugin gives you
+
+- **Four skills** — `kb-init-domain`, `kb-ingest` (auto-routes a source to a
+  domain by matching its description), `kb-search` (ranked, cited retrieval),
+  `kb-lint` (OKF conformance + wiki hygiene).
+- **A `knowledge-curator` agent** — operates the KB and runs an end-of-turn sweep
+  that captures durable knowledge discovered during the turn.
+- **Working-directory detection** — a `SessionStart` hook detects a KB in the
+  project you open and announces it (and its domains), so the tools light up only
+  where a KB exists. The scripts autodetect the `kb/` bundle, so no configuration
+  is needed.
+
+## Install
+
+```text
+/plugin marketplace add CoderNumber1/kb-research
+/plugin install okf-knowledge-base@kb-research
+```
+
+Then, in any project that has (or should have) a `kb/` bundle, ask naturally
+("add this doc to the KB", "what does the wiki say about X?", "lint the KB"), or
+invoke the skills directly. No `kb/` yet? Ask to initialize a domain and one is
+created for you.
 
 ## Layout
 
 ```
-kb/                     # the knowledge base — one OKF bundle
-├── index.md            # root catalog of domains (carries okf_version)
-├── log.md              # KB-level history
-└── <domain>/           # each domain is a self-contained subject area
-    ├── domain.md       # scope + description used to auto-route sources
-    ├── index.md        # domain catalog (progressive disclosure)
-    ├── log.md          # domain history (newest first, ISO dates)
-    ├── raw/            # immutable source snapshots (provenance)
-    ├── <concept>.md    # distilled, cross-linked concept pages
-    └── <sub-domain>/   # optional nested sub-domain (same shape, e.g. billing/eu)
-        ├── domain.md   #   registered under the parent's index.md / log.md
-        └── …
-
-.claude/
-├── skills/             # the operations
-│   ├── kb-init-domain/ # create + register a new domain
-│   ├── kb-ingest/      # snapshot a source, auto-route by domain description,
-│   │                   #   distill into concept pages  (write path)
-│   ├── kb-search/      # rank pages, traverse links, answer with citations (read path)
-│   └── kb-lint/        # OKF conformance + wiki-hygiene health check
-└── agents/
-    └── knowledge-curator.md   # agent that operates the KB, with an
-                               #   end-of-turn "capture what you learned" sweep
-
-references/
-├── okf-spec.md         # the OKF v0.1 specification
-└── llm-wiki.md         # notes on Karpathy's LLM-wiki pattern
+kb-research/
+├── .claude-plugin/marketplace.json     # one-plugin marketplace
+├── plugins/okf-knowledge-base/         # the installable plugin
+│   ├── .claude-plugin/plugin.json
+│   ├── skills/{kb-init-domain,kb-ingest,kb-search,kb-lint}/SKILL.md
+│   ├── agents/knowledge-curator.md
+│   ├── hooks/hooks.json                # SessionStart KB detector
+│   ├── scripts/                        # kb_common, init/detect/search/lint, kb_detect
+│   └── references/{okf-spec.md,llm-wiki.md}
+├── kb/                                 # example / dogfood KB (one OKF bundle)
+│   ├── index.md                        # root catalog of domains (okf_version)
+│   ├── log.md
+│   └── <domain>/                       # domain.md, index.md, log.md, raw/, concepts
+│       └── <sub-domain>/               # optional nesting, e.g. billing/eu
+├── tests/                              # pytest suite (scripts, skills, agent, plugin)
+├── docs/ci.example.yml                 # CI workflow (add under .github/workflows/)
+└── CLAUDE.md                           # KB operating guide / schema layer
 ```
 
 ## The three operations (Karpathy) over one format (OKF)
 
-- **Ingest** (`kb-ingest`) — add sources; the target domain is auto-detected by
-  matching the source's topic against each domain's description.
+- **Ingest** (`kb-ingest`) — add sources; the target (sub-)domain is auto-detected
+  by matching the source's topic against each domain's description.
 - **Query** (`kb-search`) — answer from the compiled wiki, with citations.
 - **Lint** (`kb-lint`) — check conformance and hygiene (broken links, orphans,
   index drift, stale pages, …).
 
-Plus `kb-init-domain` to open a new subject area.
+Plus `kb-init-domain` to open a new subject area (or a nested sub-domain).
 
-## Usage
+## Running the scripts directly
 
-In Claude Code, the skills trigger from natural requests ("add this doc to the
-KB", "what does the wiki say about X?", "lint the knowledge base"), or invoke them
-explicitly. For sustained knowledge work, use the **knowledge-curator** agent — it
-draws on the KB and, at the end of each turn, captures durable knowledge it
-discovered so the wiki keeps growing.
-
-Every script is pure-stdlib Python 3 and runs from the repo root, e.g.:
+Every script is pure-stdlib Python 3 and autodetects the KB in the working
+directory:
 
 ```bash
-python3 .claude/skills/kb-lint/scripts/kb_lint.py            # health check (exit 1 on conformance errors)
-python3 .claude/skills/kb-search/scripts/kb_search.py "..."  # search
-python3 .claude/skills/kb-ingest/scripts/detect_domain.py --list   # list domains
+S=plugins/okf-knowledge-base/scripts
+python3 $S/kb_lint.py                 # health check (exit 1 on conformance errors)
+python3 $S/kb_search.py "webhooks"    # search
+python3 $S/detect_domain.py --list    # list domains
 ```
 
-## Tests
+Under the installed plugin the skills call these via `${CLAUDE_PLUGIN_ROOT}`.
 
-A pytest suite exercises the scripts (against throwaway temporary knowledge
-bases) and checks the skills/agent invariants and the committed bundle's
-conformance:
+## Development
 
 ```bash
 pip install -r requirements-dev.txt
-pytest
+pytest                                # 60 tests: scripts, skills, agent, plugin
 ```
 
-CI is provided as [`docs/ci.example.yml`](docs/ci.example.yml) — copy it to
-`.github/workflows/ci.yml` to run the suite and lint the KB on every push/PR
-(pushing a workflow file needs a token with the Workflows scope).
+CI: copy `docs/ci.example.yml` to `.github/workflows/ci.yml` (kept out of the repo
+history because pushing workflow files needs a token with the Workflows scope).
 
 ## Design references
 
 - Open Knowledge Format v0.1 — Google Cloud
-  ([spec](references/okf-spec.md), [announcement](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing/)).
+  ([spec](plugins/okf-knowledge-base/references/okf-spec.md),
+  [announcement](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing/)).
 - LLM Wiki — Andrej Karpathy
   ([gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f),
-  [notes](references/llm-wiki.md)).
+  [notes](plugins/okf-knowledge-base/references/llm-wiki.md)).

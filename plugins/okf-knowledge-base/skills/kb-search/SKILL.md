@@ -18,7 +18,7 @@ description: >-
 Querying reads the *compiled* wiki — the distilled concept pages — instead of
 re-deriving understanding from raw sources every time. The job is to retrieve the
 right pages, traverse their cross-links for context, and synthesize a grounded,
-**cited** answer. Read `references/llm-wiki.md` for the model if needed.
+**cited** answer. Read `${CLAUDE_PLUGIN_ROOT}/references/llm-wiki.md` for the model if needed.
 
 ## Workflow
 
@@ -28,7 +28,7 @@ Run the ranked search (stems word families, weights title/tags/type/description
 above body text):
 
 ```bash
-python3 .claude/skills/kb-search/scripts/kb_search.py "how are failed deliveries retried" --json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_search.py" "how are failed deliveries retried" --json
 ```
 
 Useful flags:
@@ -39,7 +39,7 @@ Useful flags:
   distilled pages don't answer and you need to check the source material).
 
 If you don't know which domains exist, list them first:
-`python3 .claude/skills/kb-ingest/scripts/detect_domain.py --list`.
+`python3 "${CLAUDE_PLUGIN_ROOT}/scripts/detect_domain.py" --list`.
 
 ### 2. Read and traverse (progressive disclosure)
 

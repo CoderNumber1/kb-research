@@ -1,0 +1,20 @@
+{
+  "name": "kb-research",
+  "owner": {
+    "name": "CoderNumber1",
+    "url": "https://github.com/CoderNumber1"
+  },
+  "metadata": {
+    "description": "Marketplace hosting the OKF Knowledge Base plugin.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "okf-knowledge-base",
+      "source": "./plugins/okf-knowledge-base",
+      "description": "Agent-operated knowledge base on the Open Knowledge Format, run as a Karpathy-style LLM wiki: initialize domains, ingest sources (auto-routed by domain description), search, and lint — with a curator agent and a working-directory KB detector.",
+      "category": "knowledge",
+      "keywords": ["knowledge-base", "okf", "llm-wiki", "wiki", "ingest"]
+    }
+  ]
+}

@@ -4,8 +4,9 @@ okf_version: "0.1"
 
 # Knowledge Base
 
-This is the root of an [Open Knowledge Format](../references/okf-spec.md) bundle,
-operated as a Karpathy-style [LLM wiki](../references/llm-wiki.md). Each
+This is the root of an [Open Knowledge Format](../plugins/okf-knowledge-base/references/okf-spec.md)
+bundle, operated as a Karpathy-style
+[LLM wiki](../plugins/okf-knowledge-base/references/llm-wiki.md). Each
 subdirectory below is a **domain** — a self-contained area of knowledge with its
 own sources, concept pages, index, and log.
 

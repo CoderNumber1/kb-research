@@ -11,15 +11,18 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-SKILLS = REPO_ROOT / ".claude" / "skills"
-AGENTS = REPO_ROOT / ".claude" / "agents"
-REFERENCES = REPO_ROOT / "references"
+PLUGIN_ROOT = REPO_ROOT / "plugins" / "okf-knowledge-base"
+SKILLS = PLUGIN_ROOT / "skills"
+AGENTS = PLUGIN_ROOT / "agents"
+REFERENCES = PLUGIN_ROOT / "references"
+SCRIPTS_DIR = PLUGIN_ROOT / "scripts"
 
 SCRIPTS = {
-    "init": SKILLS / "kb-init-domain" / "scripts" / "init_domain.py",
-    "detect": SKILLS / "kb-ingest" / "scripts" / "detect_domain.py",
-    "search": SKILLS / "kb-search" / "scripts" / "kb_search.py",
-    "lint": SKILLS / "kb-lint" / "scripts" / "kb_lint.py",
+    "init": SCRIPTS_DIR / "init_domain.py",
+    "detect": SCRIPTS_DIR / "detect_domain.py",
+    "search": SCRIPTS_DIR / "kb_search.py",
+    "lint": SCRIPTS_DIR / "kb_lint.py",
+    "kb_detect": SCRIPTS_DIR / "kb_detect.py",
 }
 
 SKILL_NAMES = ["kb-init-domain", "kb-ingest", "kb-search", "kb-lint"]
@@ -80,10 +83,19 @@ def extract_frontmatter(text: str) -> dict:
     return meta
 
 
-def load_script_module(script_key: str):
-    """Import a script file as a module to unit-test its pure functions."""
-    path = SCRIPTS[script_key]
-    spec = importlib.util.spec_from_file_location(f"kb_{script_key}", path)
+def _load(path: Path, name: str):
+    spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod  # so intra-package imports (kb_common) resolve
     spec.loader.exec_module(mod)
     return mod
+
+
+def load_script_module(script_key: str):
+    """Import a script file as a module to unit-test its pure functions."""
+    return _load(SCRIPTS[script_key], f"kb_{script_key}")
+
+
+def load_common():
+    """Import the shared kb_common module for unit tests."""
+    return _load(SCRIPTS_DIR / "kb_common.py", "kb_common")

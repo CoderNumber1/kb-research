@@ -2,7 +2,7 @@
 kb-ingest relies on to file a source into the right domain."""
 import pytest
 
-from helpers import load_script_module
+from helpers import load_common
 
 
 def test_list_reports_all_domains(kb, run_json):
@@ -41,7 +41,7 @@ def test_empty_kb_exits_nonzero(empty_kb, run_script):
 
 
 def test_stemmer_unifies_word_families():
-    mod = load_script_module("detect")
+    mod = load_common()
     # Different surface forms must collapse to a shared root, or routing misses.
     assert mod.stem("webhooks") == mod.stem("webhook")
     assert mod.stem("verification") == mod.stem("verified") == mod.stem("verify")
@@ -50,7 +50,7 @@ def test_stemmer_unifies_word_families():
 
 
 def test_tokenize_drops_stopwords_and_short_tokens():
-    mod = load_script_module("detect")
+    mod = load_common()
     toks = mod.tokenize("The a of an invoice to be paid")
     assert "the" not in toks and "of" not in toks and "an" not in toks
     assert mod.stem("invoice") in toks

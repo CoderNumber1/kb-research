@@ -19,7 +19,7 @@ description: >-
 A **domain** is one OKF bundle subtree under `kb/<slug>/` — a self-contained area
 of knowledge with its own sources, concept pages, index, and log. Domains are the
 unit `kb-ingest` routes sources into and `kb-search`/`kb-lint` scope to. Read
-`references/okf-spec.md` and `references/llm-wiki.md` (repo root) if you need the
+`${CLAUDE_PLUGIN_ROOT}/references/okf-spec.md` and `${CLAUDE_PLUGIN_ROOT}/references/llm-wiki.md` (bundled with this plugin) if you need the
 underlying model.
 
 ## When to use this
@@ -29,7 +29,7 @@ area, project, subject, or topic. Do **not** create a domain for a source that
 fits an existing one — check first with:
 
 ```bash
-python3 .claude/skills/kb-ingest/scripts/detect_domain.py --list
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/detect_domain.py" --list
 ```
 
 If an existing domain's description covers the topic, ingest into it instead.
@@ -57,7 +57,7 @@ what explicitly does not before scaffolding.
 2. **Scaffold and register** in one deterministic step:
 
    ```bash
-   python3 .claude/skills/kb-init-domain/scripts/init_domain.py \
+   python3 "${CLAUDE_PLUGIN_ROOT}/scripts/init_domain.py" \
      --slug billing \
      --title "Billing & Invoicing" \
      --description "How invoices are generated, paid, and dunned across products." \
@@ -87,7 +87,7 @@ well-scoped sub-domain keeps related knowledge together and improves routing.
 Create one by giving `--slug` a path, or with `--parent`:
 
 ```bash
-python3 .claude/skills/kb-init-domain/scripts/init_domain.py \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/init_domain.py" \
   --slug billing/eu \
   --title "EU Billing" \
   --description "VAT, SEPA direct debit, and EU-specific invoicing rules." \

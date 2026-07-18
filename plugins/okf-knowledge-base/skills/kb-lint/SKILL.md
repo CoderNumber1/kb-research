@@ -17,16 +17,16 @@ description: >-
 Linting keeps the wiki trustworthy as it grows and is partly agent-generated. It
 separates hard **OKF conformance** failures from softer **wiki-hygiene** issues
 that the spec tolerates but that degrade retrieval over time (per
-`references/okf-spec.md` §9 and the lint operation in `references/llm-wiki.md`).
+`${CLAUDE_PLUGIN_ROOT}/references/okf-spec.md` §9 and the lint operation in `${CLAUDE_PLUGIN_ROOT}/references/llm-wiki.md`).
 
 ## Run it
 
 ```bash
-python3 .claude/skills/kb-lint/scripts/kb_lint.py            # whole KB
-python3 .claude/skills/kb-lint/scripts/kb_lint.py --domain billing
-python3 .claude/skills/kb-lint/scripts/kb_lint.py --json     # machine-readable
-python3 .claude/skills/kb-lint/scripts/kb_lint.py --stale-days 365   # flag old pages
-python3 .claude/skills/kb-lint/scripts/kb_lint.py --fix-index        # regenerate index.md concept lists
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_lint.py"            # whole KB
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_lint.py" --domain billing
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_lint.py" --json     # machine-readable
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_lint.py" --stale-days 365   # flag old pages
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_lint.py" --fix-index        # regenerate index.md concept lists
 ```
 
 Exit code is `0` when there are no ERRORs and `1` when conformance fails — usable

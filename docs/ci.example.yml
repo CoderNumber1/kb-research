@@ -29,4 +29,4 @@ jobs:
       - name: Run test suite
         run: pytest
       - name: Lint the committed knowledge base
-        run: python3 .claude/skills/kb-lint/scripts/kb_lint.py
+        run: python3 plugins/okf-knowledge-base/scripts/kb_lint.py

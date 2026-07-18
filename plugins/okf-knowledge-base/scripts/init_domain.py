@@ -4,16 +4,15 @@
 Creates <kb>/<slug>/{domain.md, index.md, log.md, raw/index.md}. A top-level
 domain is registered in the root kb/index.md catalog and kb/log.md. A nested
 sub-domain (slug containing "/", or via --parent) is registered under its
-parent domain's index.md ("# Sub-domains") and log.md instead. Nesting is
-OKF-conformant: domain.md is just a concept page, and directories may nest
-arbitrarily.
+parent domain's index.md ("# Sub-domains") and log.md instead.
+
+The KB root is resolved from --kb-root, else the $KB_ROOT env var, else by
+searching the working directory; if none is found a new bundle is created at
+./kb.
 
 Usage:
-  init_domain.py --slug billing --title "Billing" \
-      --description "How invoicing, payments, and dunning work."
-  # nested — parent must already exist:
-  init_domain.py --slug billing/eu --title "EU Billing" \
-      --description "VAT, SEPA, and EU-specific invoicing rules."
+  init_domain.py --slug billing --title "Billing" --description "..."
+  init_domain.py --slug billing/eu --title "EU Billing" --description "..."
   init_domain.py --parent billing --slug eu --title "EU Billing" --description "..."
 
 Exit codes: 0 ok, 2 usage/precondition error.
@@ -23,6 +22,8 @@ import datetime as dt
 import os
 import re
 import sys
+
+from kb_common import find_kb_root
 
 PLACEHOLDERS = {
     "<!-- Domains are registered here by the kb-init-domain skill. None yet. -->",
@@ -40,9 +41,7 @@ def now_iso() -> str:
 
 
 def slugify(s: str) -> str:
-    s = s.strip().lower()
-    s = re.sub(r"[^a-z0-9]+", "-", s)
-    return s.strip("-")
+    return re.sub(r"[^a-z0-9]+", "-", s.strip().lower()).strip("-")
 
 
 def slug_segments(raw: str):
@@ -64,7 +63,8 @@ def main() -> int:
                     help="One sentence describing the domain's scope. Used for "
                          "auto-detecting the target domain during ingest.")
     ap.add_argument("--tags", default="", help="Comma-separated tags.")
-    ap.add_argument("--kb-root", default="kb")
+    ap.add_argument("--kb-root", default=None,
+                    help="KB root. Defaults to a detected bundle, else ./kb.")
     ap.add_argument("--force", action="store_true",
                     help="Proceed even if the domain directory already exists.")
     args = ap.parse_args()
@@ -75,12 +75,14 @@ def main() -> int:
         print("ERROR: --slug produced an empty identifier.", file=sys.stderr)
         return 2
 
-    slug = "/".join(segments)                 # canonical, bundle-relative id
+    slug = "/".join(segments)
     is_sub = len(segments) > 1
     parent_segments = segments[:-1]
     leaf = segments[-1]
 
-    kb_root = args.kb_root.rstrip("/")
+    # Resolve KB root: explicit, else detected existing bundle, else new ./kb.
+    kb_root = (args.kb_root or find_kb_root() or "kb").rstrip("/")
+
     domain_dir = os.path.join(kb_root, *segments)
     if os.path.exists(domain_dir) and not args.force:
         print(f"ERROR: {domain_dir} already exists. Use --force to reuse.",
@@ -99,7 +101,6 @@ def main() -> int:
 
     tags = [t.strip() for t in args.tags.split(",") if t.strip()]
     os.makedirs(os.path.join(domain_dir, "raw"), exist_ok=True)
-
     kind = "sub-domain" if is_sub else "domain"
 
     domain_md = f"""---
@@ -151,25 +152,18 @@ See [domain.md](domain.md) for scope and conventions.
 """
     _write(os.path.join(domain_dir, "index.md"), index_md)
 
-    log_md = f"""# {args.title} — Update Log
+    _write(os.path.join(domain_dir, "log.md"),
+           f"# {args.title} — Update Log\n\n## {today()}\n"
+           f"* **Initialization**: Created the {args.title} {kind}.\n")
 
-## {today()}
-* **Initialization**: Created the {args.title} {kind}.
-"""
-    _write(os.path.join(domain_dir, "log.md"), log_md)
-
-    raw_index = """# Raw Sources
-
-Immutable snapshots of material ingested here. Concept pages cite back to these.
-Do not edit source snapshots after they are written.
-
-<!-- Sources are listed here by the kb-ingest skill. None yet. -->
-"""
-    _write(os.path.join(domain_dir, "raw", "index.md"), raw_index)
+    _write(os.path.join(domain_dir, "raw", "index.md"),
+           "# Raw Sources\n\nImmutable snapshots of material ingested here. "
+           "Concept pages cite back to these. Do not edit source snapshots after "
+           "they are written.\n\n<!-- Sources are listed here by the kb-ingest "
+           "skill. None yet. -->\n")
 
     if is_sub:
         parent_dir = os.path.join(kb_root, *parent_segments)
-        # Links are relative to the parent's index.md / log.md.
         _register_entry(os.path.join(parent_dir, "index.md"), "# Sub-domains",
                         f"{leaf}/index.md", args.title, args.description)
         _append_log(os.path.join(parent_dir, "log.md"),
@@ -183,8 +177,7 @@ Do not edit source snapshots after they are written.
         _append_log(os.path.join(kb_root, "log.md"),
                     f"* **Creation**: Established the "
                     f"[{args.title}]({slug}/index.md) domain.")
-        reg = (f"Registered in {os.path.join(kb_root, 'index.md')} and appended "
-               f"to {os.path.join(kb_root, 'log.md')}.")
+        reg = f"Registered in {os.path.join(kb_root, 'index.md')}."
 
     print(f"OK: created {kind} '{slug}' at {domain_dir}")
     print("Files: domain.md, index.md, log.md, raw/index.md")
@@ -203,11 +196,7 @@ def _ensure_kb_root(kb_root: str) -> None:
         _write(root_log, "# Knowledge Base Log\n\nNewest first.\n")
 
 
-def _register_entry(index_path: str, heading: str, link_target: str,
-                    title: str, desc: str) -> None:
-    """Insert a catalog bullet under `heading` in an index.md, creating the
-    section if absent. Inserts within the correct section regardless of where
-    that section sits in the file."""
+def _register_entry(index_path, heading, link_target, title, desc) -> None:
     entry = f"* [{title}]({link_target}) - {desc}"
     if not os.path.exists(index_path):
         _write(index_path, f"# {title}'s parent\n\n{heading}\n\n{entry}\n")
@@ -231,7 +220,7 @@ def _register_entry(index_path: str, heading: str, link_target: str,
     _write(index_path, "\n".join(lines) + "\n")
 
 
-def _append_log(log_path: str, line: str) -> None:
+def _append_log(log_path, line) -> None:
     if not os.path.exists(log_path):
         _write(log_path, f"# Update Log\n\n## {today()}\n{line}\n")
         return

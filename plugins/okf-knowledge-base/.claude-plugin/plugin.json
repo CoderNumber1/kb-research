@@ -1,0 +1,23 @@
+{
+  "name": "okf-knowledge-base",
+  "displayName": "OKF Knowledge Base",
+  "version": "0.1.0",
+  "description": "Agent-operated knowledge base on the Open Knowledge Format, run as a Karpathy-style LLM wiki. Skills to initialize domains, ingest sources (auto-routed by domain description), search, and lint; a knowledge-curator agent with an end-of-turn capture sweep; and a SessionStart hook that detects a KB in the working directory and lights up the tools.",
+  "author": {
+    "name": "kb-research"
+  },
+  "homepage": "https://github.com/CoderNumber1/kb-research",
+  "repository": "https://github.com/CoderNumber1/kb-research",
+  "license": "MIT",
+  "keywords": [
+    "knowledge-base",
+    "okf",
+    "open-knowledge-format",
+    "llm-wiki",
+    "wiki",
+    "ingest",
+    "rag",
+    "curator",
+    "agent"
+  ]
+}
