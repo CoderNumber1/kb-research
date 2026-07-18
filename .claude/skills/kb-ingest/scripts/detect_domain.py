@@ -93,23 +93,28 @@ def _scalar(v: str):
 
 
 def load_domains(kb_root: str):
+    """Discover every domain in the bundle — any directory holding a domain.md,
+    at any depth. Nested sub-domains are returned with a bundle-relative slug
+    like 'billing/eu', so ingest can route a source to the most specific match."""
     domains = []
     if not os.path.isdir(kb_root):
         return domains
-    for name in sorted(os.listdir(kb_root)):
-        dpath = os.path.join(kb_root, name)
-        dmd = os.path.join(dpath, "domain.md")
-        if not os.path.isdir(dpath) or not os.path.isfile(dmd):
+    for dirpath, _dirnames, filenames in os.walk(kb_root):
+        if "domain.md" not in filenames:
             continue
+        rel = os.path.relpath(dirpath, kb_root).replace(os.sep, "/")
+        if rel == ".":
+            continue  # the bundle root is not itself a domain
+        dmd = os.path.join(dirpath, "domain.md")
         with open(dmd, encoding="utf-8") as f:
             meta, body = parse_frontmatter(f.read())
         tags = meta.get("tags", [])
         if isinstance(tags, str):
             tags = [tags] if tags else []
         domains.append({
-            "slug": meta.get("slug", name),
-            "dir": dpath,
-            "title": meta.get("title", name),
+            "slug": rel,  # derived from location — authoritative over frontmatter
+            "dir": dirpath,
+            "title": meta.get("title", rel),
             "description": meta.get("description", ""),
             "tags": tags,
             "status": meta.get("status", "active"),
@@ -119,6 +124,7 @@ def load_domains(kb_root: str):
                                 " ".join(tags)),
             "_weak": tokenize(meta.get("description", "") + " " + body),
         })
+    domains.sort(key=lambda d: d["slug"])
     return domains
 
 

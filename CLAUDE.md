@@ -15,7 +15,8 @@ sources every time is the anti-pattern this repo exists to avoid.
 
 - `kb/` — the knowledge base (one OKF bundle). Each subdirectory is a **domain**
   with `domain.md` (scope + routing description), `index.md`, `log.md`, `raw/`
-  (immutable snapshots), and concept pages.
+  (immutable snapshots), and concept pages. Domains may nest **sub-domains**
+  (e.g. `billing/eu`) — same shape, registered under the parent's `index.md`.
 - `.claude/skills/` — the operations: `kb-init-domain`, `kb-ingest`, `kb-search`,
   `kb-lint`.
 - `.claude/agents/knowledge-curator.md` — the agent for sustained KB work,

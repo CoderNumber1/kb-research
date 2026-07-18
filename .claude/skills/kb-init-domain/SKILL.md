@@ -9,8 +9,9 @@ description: >-
   wiki section on onboarding", or when kb-ingest determines an incoming source
   belongs to a subject the KB does not cover yet. Scaffolds the domain's
   domain.md (scope + description used for auto-routing), index.md, log.md, and
-  raw/, and registers it in the root catalog. Trigger this before ingesting
-  sources for a brand-new topic.
+  raw/, and registers it in the root catalog. Supports nested sub-domains
+  (e.g. billing/eu) for narrower areas within a domain. Trigger this before
+  ingesting sources for a brand-new topic.
 ---
 
 # Initialize a Knowledge Base Domain
@@ -75,11 +76,40 @@ what explicitly does not before scaffolding.
    entry. If the domain was created to receive a specific source, hand off to
    `kb-ingest` next.
 
+## Nested sub-domains
+
+A domain can hold **sub-domains** — narrower areas that deserve their own scope,
+sources, and routing. Reach for one when a domain is getting broad and a slice of
+it has a distinct description (e.g. region-, product-, or version-specific rules).
+`kb-ingest` will route a source to the most specific matching (sub-)domain, so a
+well-scoped sub-domain keeps related knowledge together and improves routing.
+
+Create one by giving `--slug` a path, or with `--parent`:
+
+```bash
+python3 .claude/skills/kb-init-domain/scripts/init_domain.py \
+  --slug billing/eu \
+  --title "EU Billing" \
+  --description "VAT, SEPA direct debit, and EU-specific invoicing rules." \
+  --tags vat,sepa,eu
+# equivalently: --parent billing --slug eu
+```
+
+This scaffolds `kb/billing/eu/{domain.md, index.md, log.md, raw/}` and registers
+it under the **parent's** `index.md` (a `# Sub-domains` section) and `log.md` —
+not the root catalog, so the hierarchy stays navigable by progressive disclosure.
+Nesting can go as deep as needed (`billing/eu/vat`). The **parent must already
+exist**; the script errors if it doesn't, so create top-down. Don't over-nest —
+add a sub-domain when its scope is genuinely distinct, not for every subtopic (an
+ordinary concept page or subdirectory is usually enough).
+
 ## Conventions
 
-- The KB root is `kb/`. Every domain is a direct child directory.
+- The KB root is `kb/`. Top-level domains are direct children; sub-domains nest
+  inside their parent domain's directory.
 - `domain.md` has `type: Domain` and carries the routing `description` — keep it
-  current if the domain's scope shifts.
+  current if the (sub-)domain's scope shifts. Its `slug` is the full
+  bundle-relative path (e.g. `billing/eu`).
 - Never put concept pages at the KB root; they belong inside a domain.
-- After creating a domain, a `kb-lint` run should still pass (empty domains are
-  valid). Populate it via `kb-ingest`.
+- After creating a (sub-)domain, a `kb-lint` run should still pass (empty domains
+  are valid). Populate it via `kb-ingest`.

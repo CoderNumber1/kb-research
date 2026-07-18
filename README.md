@@ -17,7 +17,10 @@ kb/                     # the knowledge base — one OKF bundle
     ├── index.md        # domain catalog (progressive disclosure)
     ├── log.md          # domain history (newest first, ISO dates)
     ├── raw/            # immutable source snapshots (provenance)
-    └── <concept>.md    # distilled, cross-linked concept pages
+    ├── <concept>.md    # distilled, cross-linked concept pages
+    └── <sub-domain>/   # optional nested sub-domain (same shape, e.g. billing/eu)
+        ├── domain.md   #   registered under the parent's index.md / log.md
+        └── …
 
 .claude/
 ├── skills/             # the operations

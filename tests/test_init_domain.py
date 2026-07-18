@@ -62,3 +62,49 @@ def test_created_domain_lints_clean(kb, run_script):
     # The `kb` fixture builds three domains; the bundle must be conformant.
     proc = run_script("lint", "--kb-root", kb)
     assert proc.returncode == 0, proc.stdout
+
+
+# --- nested sub-domains ---------------------------------------------------
+
+def test_nested_subdomain_registered_under_parent(empty_kb, run_script):
+    run_script("init", "--kb-root", empty_kb, "--slug", "billing",
+               "--title", "Billing", "--description", "Invoices and payments.")
+    proc = run_script("init", "--kb-root", empty_kb, "--slug", "billing/eu",
+                      "--title", "EU Billing", "--description", "EU VAT and SEPA.")
+    assert proc.returncode == 0, proc.stderr
+    assert (empty_kb / "billing" / "eu" / "domain.md").exists()
+    assert "slug: billing/eu" in (empty_kb / "billing" / "eu" / "domain.md").read_text()
+    parent_index = (empty_kb / "billing" / "index.md").read_text()
+    assert "# Sub-domains" in parent_index
+    assert "[EU Billing](eu/index.md)" in parent_index
+    parent_log = (empty_kb / "billing" / "log.md").read_text()
+    assert "sub-domain" in parent_log and "EU Billing" in parent_log
+    # A sub-domain is reached through its parent, not the root catalog.
+    assert "billing/eu" not in (empty_kb / "index.md").read_text()
+
+
+def test_nested_requires_existing_parent(empty_kb, run_script):
+    proc = run_script("init", "--kb-root", empty_kb, "--slug", "shipping/intl",
+                      "--title", "Intl", "--description", "x")
+    assert proc.returncode == 2
+    assert "parent domain" in proc.stderr
+
+
+def test_parent_flag_matches_path_slug(empty_kb, run_script):
+    run_script("init", "--kb-root", empty_kb, "--slug", "billing",
+               "--title", "Billing", "--description", "Invoices.")
+    proc = run_script("init", "--kb-root", empty_kb, "--parent", "billing",
+                      "--slug", "eu", "--title", "EU", "--description", "EU rules.")
+    assert proc.returncode == 0, proc.stderr
+    assert (empty_kb / "billing" / "eu" / "domain.md").exists()
+
+
+def test_deeply_nested_bundle_lints_clean(empty_kb, run_script):
+    run_script("init", "--kb-root", empty_kb, "--slug", "billing",
+               "--title", "Billing", "--description", "Invoices.")
+    run_script("init", "--kb-root", empty_kb, "--slug", "billing/eu",
+               "--title", "EU", "--description", "EU rules.")
+    run_script("init", "--kb-root", empty_kb, "--slug", "billing/eu/vat",
+               "--title", "EU VAT", "--description", "VAT rate tables.")
+    assert (empty_kb / "billing" / "eu" / "vat" / "domain.md").exists()
+    assert run_script("lint", "--kb-root", empty_kb).returncode == 0

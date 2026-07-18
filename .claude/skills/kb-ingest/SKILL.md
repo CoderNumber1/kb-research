@@ -57,6 +57,13 @@ with `--list`:
 - **no domain fits** → create one first with the `kb-init-domain` skill, then
   continue. Don't force an unrelated source into an existing domain.
 
+Detection is recursive: a recommendation may be a **nested sub-domain** such as
+`billing/eu`. Prefer the most specific matching (sub-)domain — it keeps related
+knowledge together. Pass the full slug wherever a domain is expected (search and
+lint accept nested paths, e.g. `--domain billing/eu`). If a source clearly needs
+a narrower home that doesn't exist yet, create a sub-domain with `kb-init-domain`
+before ingesting.
+
 A source may legitimately touch two domains — ingest the primary knowledge into
 its best home and add a cross-link from the other, rather than duplicating pages.
 

@@ -54,3 +54,27 @@ def test_tokenize_drops_stopwords_and_short_tokens():
     toks = mod.tokenize("The a of an invoice to be paid")
     assert "the" not in toks and "of" not in toks and "an" not in toks
     assert mod.stem("invoice") in toks
+
+
+# --- nested sub-domains ---------------------------------------------------
+
+def _billing_with_eu(root, run_script):
+    run_script("init", "--kb-root", root, "--slug", "billing", "--title", "Billing",
+               "--description", "Invoices, payments, refunds, dunning for all regions.")
+    run_script("init", "--kb-root", root, "--slug", "billing/eu", "--title",
+               "EU Billing", "--tags", "vat,sepa,eu", "--description",
+               "VAT, SEPA direct debit, and EU-specific invoicing and e-invoicing rules.")
+
+
+def test_discovers_nested_subdomains(empty_kb, run_script, run_json):
+    _billing_with_eu(empty_kb, run_script)
+    data, _ = run_json("detect", "--kb-root", empty_kb, "--list", "--json")
+    slugs = {d["slug"] for d in data["domains"]}
+    assert "billing" in slugs and "billing/eu" in slugs
+
+
+def test_routes_to_more_specific_subdomain(empty_kb, run_script, run_json):
+    _billing_with_eu(empty_kb, run_script)
+    data, _ = run_json("detect", "--kb-root", empty_kb, "--json", "--query",
+                       "customer VAT invoice via SEPA direct debit in Germany")
+    assert data["recommendation"] == "billing/eu"

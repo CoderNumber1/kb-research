@@ -27,7 +27,9 @@ start of substantive work if their model isn't already clear to you.
 
 - Root: `kb/`. Each direct subdirectory is a **domain** (a self-contained OKF
   bundle subtree) with `domain.md` (scope + routing description), `index.md`,
-  `log.md`, `raw/` (immutable source snapshots), and concept pages.
+  `log.md`, `raw/` (immutable source snapshots), and concept pages. Domains may
+  nest **sub-domains** (e.g. `billing/eu`); ingest routes to the most specific
+  matching one, and search/lint accept the nested slug as `--domain`.
 - Concept pages are markdown with YAML frontmatter; `type` is the only required
   field. Pages cite raw sources and cross-link each other with bundle-relative
   links like `[x](/domain/x.md)`.
