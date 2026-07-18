@@ -55,11 +55,14 @@ def main() -> int:
             nxt = pages[(j + 1) % n]
             bw = rnd.sample(VOCAB, 6)
             title = f"{d} {p}"
+            # A per-page unique token keeps pages distinct (a healthy KB has
+            # little duplication), so search/detect/analyze timings are realistic.
+            uniq = f"topic{di}item{j}"
             w(os.path.join(ddir, p + ".md"),
               f"---\ntype: Reference\ntitle: {title}\ndescription: About "
-              f"{' '.join(bw[:3])}.\ntags: [{', '.join(bw[:2])}]\n"
+              f"{' '.join(bw[:3])} ({uniq}).\ntags: [{', '.join(bw[:2])}]\n"
               f"timestamp: 2026-07-18T00:00:00Z\n---\n\n# Overview\nThis page "
-              f"covers {' '.join(bw)}. See [{d} {nxt}](/{d}/{nxt}.md).\n")
+              f"covers {' '.join(bw)} for {uniq}. See [{d} {nxt}](/{d}/{nxt}.md).\n")
             lines.append(f"* [{title}]({p}.md) - About {' '.join(bw[:3])}.\n")
         lines.append("\n# Sources\n\n* [Raw sources](raw/) - snapshots.\n")
         w(os.path.join(ddir, "index.md"), "".join(lines))

@@ -28,7 +28,7 @@ sources every time is the anti-pattern this repo exists to avoid.
   (e.g. `billing/eu`) — same shape, registered under the parent's `index.md`.
 - `plugins/okf-knowledge-base/` — the installable plugin:
   - `skills/` — the operations: `kb-init-domain`, `kb-ingest`, `kb-search`,
-    `kb-lint`.
+    `kb-lint`, `kb-consolidate`.
   - `agents/knowledge-curator.md` — the agent for sustained KB work, including
     the end-of-turn capture sweep.
   - `scripts/` — pure-stdlib helpers the skills call (`kb_common.py` holds the

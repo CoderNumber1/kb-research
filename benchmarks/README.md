@@ -1,8 +1,8 @@
 # Benchmarks
 
 Compare the three plugin variants — Python scripts, PowerShell scripts, and
-scriptless — on the read-heavy operations (`lint`, `search`, `detect`) across
-knowledge bases of increasing size.
+scriptless — on the read-heavy operations (`lint`, `search`, `detect`,
+`analyze`) across knowledge bases of increasing size.
 
 ## Run
 

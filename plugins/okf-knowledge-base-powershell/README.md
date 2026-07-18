@@ -13,15 +13,16 @@ pick whichever runtime your environment already has.
 
 ## Components
 
-- **skills/** — `kb-init-domain`, `kb-ingest`, `kb-search`, `kb-lint`; each calls
-  a bundled `pwsh` script via `${CLAUDE_PLUGIN_ROOT}/scripts/*.ps1`.
+- **skills/** — `kb-init-domain`, `kb-ingest`, `kb-search`, `kb-lint`,
+  `kb-consolidate`; each calls a bundled `pwsh` script via
+  `${CLAUDE_PLUGIN_ROOT}/scripts/*.ps1`.
 - **agents/knowledge-curator.md** — operates the KB with the end-of-turn capture
   sweep.
 - **hooks/hooks.json** — a `SessionStart` hook running `scripts/kb_detect.ps1`,
   which announces a KB found in the working directory.
 - **scripts/** — `KbCommon.psm1` (shared module: frontmatter parser, stemmer,
   `Find-KbRoot`) plus `init_domain.ps1`, `detect_domain.ps1`, `kb_search.ps1`,
-  `kb_lint.ps1`, `kb_detect.ps1`.
+  `kb_lint.ps1`, `kb_analyze.ps1`, `kb_detect.ps1`.
 - **references/** — the OKF spec and LLM-wiki notes.
 
 The scripts share the Python variant's CLI exactly (`--kb-root`, `--query`,

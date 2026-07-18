@@ -21,7 +21,7 @@ PWSH = shutil.which("pwsh")
 needs_pwsh = pytest.mark.skipif(PWSH is None, reason="pwsh not installed")
 
 PS_SCRIPTS = ["KbCommon.psm1", "init_domain.ps1", "detect_domain.ps1",
-              "kb_search.ps1", "kb_lint.ps1", "kb_detect.ps1"]
+              "kb_search.ps1", "kb_lint.ps1", "kb_analyze.ps1", "kb_detect.ps1"]
 
 
 # --- structural -----------------------------------------------------------
@@ -125,6 +125,25 @@ def test_lint_parity_with_faults(kb):
     ps = _ps("kb_lint.ps1", "--kb-root", kb, "--json")
     assert py.returncode == ps.returncode == 1
     assert json.loads(py.stdout) == json.loads(ps.stdout)
+
+
+@needs_pwsh
+def test_analyze_parity(kb):
+    body = ("A refund returns money to the customer. Refunds are issued for "
+            "failed charges, disputed charges, and chargebacks. Finance approves "
+            "refunds over one thousand dollars. Refunds settle in five days.")
+    for path, title in [("billing/refunds.md", "Refund processing"),
+                        ("billing/issuing-refunds.md", "Issuing refunds"),
+                        ("auth/refund-requests.md", "Handling refund requests")]:
+        write_md(kb / path, {"type": "Reference", "title": title,
+                             "description": "How a refund is issued after a "
+                             "failed or disputed charge.", "tags": ["refunds"],
+                             "timestamp": "2026-07-18T00:00:00Z"}, "# X\n" + body)
+    for extra in ([], ["--domain", "billing"], ["--min-similarity", "0.6"]):
+        py = run("analyze", "--kb-root", kb, "--json", *extra)
+        ps = _ps("kb_analyze.ps1", "--kb-root", kb, "--json", *extra)
+        assert py.returncode == ps.returncode
+        assert _norm(py.stdout) == _norm(ps.stdout), extra
 
 
 @needs_pwsh

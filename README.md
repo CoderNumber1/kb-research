@@ -13,11 +13,13 @@ dogfoods them against the example KB in `kb/`.
 
 ## The three plugins
 
-All give you the same four skills — `kb-init-domain`, `kb-ingest` (routes a
+All give you the same five skills — `kb-init-domain`, `kb-ingest` (routes a
 source to a domain by its description), `kb-search` (ranked, cited retrieval),
-`kb-lint` (OKF conformance + hygiene) — plus a `knowledge-curator` agent with an
-end-of-turn capture sweep and a `SessionStart` hook that detects a KB in the
-working directory. They differ only in *how the work happens*:
+`kb-lint` (OKF conformance + hygiene), and `kb-consolidate` (find duplicate/
+overlapping pages and merge them to shrink the KB, recommend-then-apply) — plus a
+`knowledge-curator` agent with an end-of-turn capture sweep and a `SessionStart`
+hook that detects a KB in the working directory. They differ only in *how the
+work happens*:
 
 | Plugin | How it works | Dependencies |
 |--------|--------------|--------------|
@@ -86,7 +88,11 @@ kb-research/
 - **Lint** (`kb-lint`) — check conformance and hygiene (broken links, orphans,
   index drift, stale pages, …).
 
-Plus `kb-init-domain` to open a new subject area (or a nested sub-domain).
+Plus `kb-init-domain` to open a new subject area (or a nested sub-domain), and
+`kb-consolidate` to find and merge duplicate/overlapping pages (within a domain,
+or across domains into a canonical home or a new common domain) — recommending
+first and applying only what you approve, to shrink the KB without losing
+knowledge.
 
 ## Running the scripts directly
 

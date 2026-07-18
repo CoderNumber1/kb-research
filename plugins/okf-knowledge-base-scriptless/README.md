@@ -23,8 +23,9 @@ collides.
 
 ## Components
 
-- **skills/** — `kb-init-domain`, `kb-ingest`, `kb-search`, `kb-lint`, each a
-  self-contained procedure the agent follows with file tools.
+- **skills/** — `kb-init-domain`, `kb-ingest`, `kb-search`, `kb-lint`,
+  `kb-consolidate`, each a self-contained procedure the agent follows with file
+  tools.
 - **agents/knowledge-curator.md** — operates the KB with the end-of-turn capture
   sweep.
 - **hooks/hooks.json** — a `SessionStart` hook (an inline shell one-liner, no

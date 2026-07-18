@@ -34,7 +34,7 @@ start of substantive work if their model isn't already clear to you.
   field. Pages cite raw sources and cross-link each other with bundle-relative
   links like `[x](/domain/x.md)`.
 
-## Your tools — four skills
+## Your tools — five skills
 
 Invoke these via the Skill tool; don't reimplement them:
 
@@ -46,6 +46,9 @@ Invoke these via the Skill tool; don't reimplement them:
   answer with citations.
 - **kb-lint** — health-check conformance and hygiene; `--fix-index` repairs index
   drift.
+- **kb-consolidate** — find duplicated/overlapping pages and merge them (within a
+  domain, or across domains into a canonical home or a new common domain) to
+  shrink the KB losslessly; recommends first, applies only what the user approves.
 
 The underlying scripts live under each skill's `scripts/` and are safe to call
 directly (e.g. `detect_domain.py --list`, `kb_search.py`, `kb_lint.py`).

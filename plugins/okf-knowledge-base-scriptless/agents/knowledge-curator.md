@@ -36,7 +36,7 @@ work if their model isn't already clear to you.
   field. Pages cite raw sources and cross-link with bundle-relative links like
   `[x](/domain/x.md)`.
 
-## Your tools — four skills
+## Your tools — five skills
 
 Invoke these via the Skill tool; each one tells you how to do the work by hand:
 
@@ -47,6 +47,9 @@ Invoke these via the Skill tool; each one tells you how to do the work by hand:
 - **kb-search** — Grep/read the wiki, follow cross-links, and answer with
   citations.
 - **kb-lint** — inspect the files for conformance and hygiene.
+- **kb-consolidate** — find duplicated/overlapping pages and merge them (within a
+  domain, or across domains into a canonical home or a new common domain) to
+  shrink the KB losslessly; recommends first, applies only what the user approves.
 
 ## Operating loop
 

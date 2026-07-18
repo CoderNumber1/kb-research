@@ -49,6 +49,10 @@ def ops(kb):
             "py": ["python3", os.path.join(PY, "detect_domain.py"), "--kb-root", kb, "--query", DETECT_Q, "--json"],
             "ps": ["pwsh", "-NoProfile", "-File", os.path.join(PS, "detect_domain.ps1"), "--kb-root", kb, "--query", DETECT_Q, "--json"],
         },
+        "analyze": {
+            "py": ["python3", os.path.join(PY, "kb_analyze.py"), "--kb-root", kb, "--json"],
+            "ps": ["pwsh", "-NoProfile", "-File", os.path.join(PS, "kb_analyze.ps1"), "--kb-root", kb, "--json"],
+        },
     }
 
 
@@ -137,7 +141,7 @@ def write_md(path, meta, results, has_pwsh):
              "tokens + tool round-trips) so it is shown separately as a "
              "context-load proxy.\n")
 
-    for op in ("lint", "search", "detect"):
+    for op in ("lint", "search", "detect", "analyze"):
         L.append(f"\n## `{op}` — wall-clock, median ms (lower is better)\n")
         if has_pwsh:
             L.append("| KB pages | .md files | Python | PowerShell | PS ÷ Py | output parity |")

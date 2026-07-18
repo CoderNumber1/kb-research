@@ -24,10 +24,11 @@ SCRIPTS = {
     "detect": SCRIPTS_DIR / "detect_domain.py",
     "search": SCRIPTS_DIR / "kb_search.py",
     "lint": SCRIPTS_DIR / "kb_lint.py",
+    "analyze": SCRIPTS_DIR / "kb_analyze.py",
     "kb_detect": SCRIPTS_DIR / "kb_detect.py",
 }
 
-SKILL_NAMES = ["kb-init-domain", "kb-ingest", "kb-search", "kb-lint"]
+SKILL_NAMES = ["kb-init-domain", "kb-ingest", "kb-search", "kb-lint", "kb-consolidate"]
 
 # (slug, title, description, tags) for the standard multi-domain test fixture.
 DOMAINS = [
