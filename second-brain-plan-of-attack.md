@@ -159,4 +159,50 @@ Fields to include at minimum:
 
 ---
 
+## Resources — where to find and install every tool referenced
+
+*Consolidated so nothing in this plan is referenced without a source. All are community-built; none are official Anthropic products.*
+
+### Out-of-the-box skills (Phase 1)
+
+**The engineering five — librarian, pickup, adhd-task-triage, schedule, mirror**
+These are custom Claude Code skills documented on the author's blog rather than a one-command marketplace install. Each is a `SKILL.md` you place in `.claude/skills/<name>/`. Source and build guidance:
+- The five skills: https://chudi.dev/blog/claude-code-skills-adhd-developers
+- The workflow they plug into: https://chudi.dev/blog/claude-code-adhd-workflows
+- The CLAUDE.md config layer: https://chudi.dev/blog/adhd-developers-guide-claude-md
+- Free ADHD CLAUDE.md config: https://chudi.dev/guide/adhd
+
+**ravila4 toolkit — nudge + time hooks (and daily-journal/TDD, referenced for the git-native rebuild)**
+- Repo: https://github.com/ravila4/claude-adhd-skills
+- Install:
+  ```bash
+  git clone https://github.com/ravila4/claude-adhd-skills.git
+  cd claude-adhd-skills
+  cp -r skills/* ~/.claude/skills/
+  cp hooks/* ~/.claude/hooks/
+  ```
+- Then wire the hooks into `~/.claude/settings.json` (see the repo's `settings.json.example`).
+- Requires: Claude Code CLI, Python 3.10+, SQLite3. (Note: its `obsidian-vault` and `daily-journal` skills target Obsidian — you are deliberately *not* using those and rebuilding daily-capture git-native in Phase 2a. The **nudge** and **time hooks** you *are* using have no Obsidian dependency.)
+
+**i-have-adhd (optional output style)**
+- Marketplace: `claude plugin marketplace add ayghri/i-have-adhd`
+- Install: `claude plugin install i-have-adhd@i-have-adhd`
+- Invoke: `/i-have-adhd`
+- Optional always-on: create `~/.claude/.i-have-adhd-always`
+
+### Reference material (Phase 2 build)
+
+- Claude Code skills — how `SKILL.md` files work (needed to build your custom daily-capture skill and templates): https://code.claude.com/docs/en/skills
+- Claude Code plugin marketplaces (if you later package your own skills): https://code.claude.com/docs/en/plugin-marketplaces
+- General ADHD productivity patterns (paralysis, second brain, 30-day goals, life audit): https://www.claudecodehq.com/blog/claude-skills-adhd
+
+### Not part of your stack — flagged to avoid confusion
+
+- **UditAkhourii/adhd** — a tree-of-thought *reasoning* skill for the agent, NOT ADHD executive-function support for you. Do not install it expecting the latter. https://github.com/uditakhourii/adhd
+
+### Caveat on links
+These URLs are current as of this plan's writing but community repos and blogs move. If any 404s, search the skill name plus "Claude Code skill" and prefer the original author's repo or blog over aggregators. Validate any `SKILL.md` you didn't write before making it load-bearing.
+
+---
+
 *All skills referenced are community-built; none are official Anthropic products, and effectiveness claims are largely self-reported. Validate each against your own workflow before making it load-bearing.*
