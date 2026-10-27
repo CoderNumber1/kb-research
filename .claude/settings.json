@@ -1,0 +1,11 @@
+{
+  "enableAllProjectMcpServers": true,
+  "extraKnownMarketplaces": {
+    "kb-mcp-probe": {
+      "source": {"source": "directory", "path": "./probes/mcp"}
+    }
+  },
+  "enabledPlugins": {
+    "mcp-probe@kb-mcp-probe": true
+  }
+}

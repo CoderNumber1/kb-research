@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "probe-interp": {
+      "command": "python3",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/server.py", "--label", "plugin-interp"]
+    },
+    "probe-exec": {
+      "command": "${CLAUDE_PLUGIN_ROOT}/server.py",
+      "args": ["--label", "plugin-exec"]
+    }
+  }
+}

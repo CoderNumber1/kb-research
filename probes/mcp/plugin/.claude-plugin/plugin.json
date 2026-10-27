@@ -1,0 +1,5 @@
+{
+  "name": "mcp-probe",
+  "version": "0.0.1",
+  "description": "Probe-only plugin: checks whether a plugin .mcp.json is loaded in Claude Code cloud sessions. Not for real use."
+}

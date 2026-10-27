@@ -1,0 +1,8 @@
+{
+  "name": "kb-mcp-probe",
+  "owner": {"name": "CoderNumber1", "url": "https://github.com/CoderNumber1"},
+  "metadata": {"description": "Probe-only marketplace for the cloud MCP plugin probe.", "version": "0.0.1"},
+  "plugins": [
+    {"name": "mcp-probe", "source": "./plugin", "description": "Probe-only plugin with a .mcp.json."}
+  ]
+}

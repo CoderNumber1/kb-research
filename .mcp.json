@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "probe-project": {
+      "command": "python3",
+      "args": ["probes/mcp/plugin/server.py", "--label", "project"]
+    }
+  }
+}
