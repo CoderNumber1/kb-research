@@ -7,66 +7,71 @@ description: >-
   about something, wants to look up / find / recall information that may have been
   captured before, or asks a question that the KB likely covers — e.g. "what does
   the KB say about webhook retries?", "search the wiki for our dunning policy",
-  "do we have anything on the payments API?", "look up how signature verification
-  works". Prefer this over ad-hoc grep: it ranks pages by relevance across
-  domains, follows cross-links for context, and answers from compiled knowledge
-  rather than raw sources. This is the read path of the wiki.
+  "do we have anything on the payments API?". Prefer this over ad-hoc grep: it
+  ranks pages by relevance across domains, follows cross-links for context, and
+  answers from compiled knowledge rather than raw sources. This is the read path
+  of the wiki.
 ---
 
 # Search the Knowledge Base
 
-Querying reads the *compiled* wiki — the distilled concept pages — instead of
-re-deriving understanding from raw sources every time. The job is to retrieve the
-right pages, traverse their cross-links for context, and synthesize a grounded,
-**cited** answer. Read `${CLAUDE_PLUGIN_ROOT}/references/llm-wiki.md` for the model if needed.
+Querying reads the *compiled* wiki — the distilled Concept Pages — instead of
+re-deriving understanding from raw sources every time. The job is to retrieve
+the right pages, traverse their cross-links for context, and synthesize a
+grounded, **cited** answer. Read
+`${CLAUDE_PLUGIN_ROOT}/references/knowledge-base.md` for the governing model if
+needed. Pass `kb_root` = absolute path of the workspace `kb/` on every call.
 
-## Workflow
+## 1. Retrieve
 
-### 1. Retrieve
+Call **kb_search** with `query` (the natural-language question). It stems word
+families and weights title, tags, type, and description above body text.
+Optional arguments:
 
-Run the ranked search (stems word families, weights title/tags/type/description
-above body text):
+- `domain` — scope to one (sub-)domain slug when you know the area.
+- `type` — restrict to a frontmatter type (e.g. `Playbook`).
+- `limit` — more or fewer hits (default 10).
+- `include_raw: true` — also search Markdown Raw Artifacts under `raw/` when
+  the distilled pages do not answer. Off by default; non-Markdown files are
+  never included.
 
-```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_search.py" "how are failed deliveries retried" --json
-```
+If you don't know which domains exist, call **kb_detect_domain** with
+`list: true`.
 
-Useful flags:
-- `--domain <slug>` — scope to one domain when you already know the area.
-- `--type <Type>` — restrict to a frontmatter type (e.g. `Playbook`).
-- `--limit N` — more/fewer hits (default 10).
-- `--include-raw` — also search `raw/` snapshots (off by default; use when the
-  distilled pages don't answer and you need to check the source material).
+## 2. Read and traverse (progressive disclosure)
 
-If you don't know which domains exist, list them first:
-`python3 "${CLAUDE_PLUGIN_ROOT}/scripts/detect_domain.py" --list`.
+Open the top-ranked pages. Use `index.md` files and the cross-links inside
+pages to pull in adjacent context — a page on retries links to the page on
+signatures. Follow links until you have enough to answer; follow the graph,
+don't dump every page. Note each page's `status` (`draft` is incomplete,
+`deprecated` is historical) and whether it is past its `stale_after`.
 
-### 2. Read and traverse (progressive disclosure)
+## 3. Fall back when the knowledge base does not answer
 
-Open the top-ranked pages. Use `index.md` files and the bundle-relative
-cross-links inside pages to pull in adjacent context — a page on retries will
-link to the page on signatures, etc. Follow links until you have enough to answer;
-don't dump every page, follow the graph.
+If the hits are absent, weak, or don't address the question, continue with
+the codebase, external sources, and your own reasoning.
 
-### 3. Synthesize a cited answer
+## 4. Synthesize a cited answer
 
-Answer the question directly, grounded in what the pages say. **Cite the pages you
-used** by their KB path so the user can verify, e.g. "per
-[retry policy](/billing/retry-policy.md), deliveries retry with exponential
-backoff for 24h." Distinguish what the KB actually states from your own inference.
+Answer directly, grounded in what the pages say. **Cite the pages you used** by
+their KB path, e.g. "per [retry policy](/billing/retry-policy.md), deliveries
+retry with exponential backoff for 24h." Distinguish what the KB states from
+your own inference, and say where an answer came from outside the KB.
 
-### 4. Handle gaps honestly
+## 5. Handle gaps honestly
 
-- **No hits / thin coverage** → say so plainly. Offer to ingest a source
-  (`kb-ingest`) to fill the gap rather than inventing an answer.
-- **Contradictions across pages** → surface them; they're a signal to reconcile
-  (a `kb-lint` job or a follow-up ingest).
+- **No hits or thin coverage** → this is not a "no" or "not supported". Fall
+  back (step 3).
+- **A page explicitly records that something is unsupported or was decided
+  against** → that is a legitimate negative answer; cite it.
+- **After exhausting all sources** → if the answer is genuinely unknown, say
+  "I don't know" plainly. Never invent a negative to fill the gap.
+- **Contradictions across pages** → surface them; they need reconciling (a
+  follow-up ingest).
 
 ## Compounding note
 
-If, while answering, you produce a genuinely new and *durable* synthesis that the
-KB doesn't yet capture (not a one-off restatement), that's worth writing back as a
-concept page via `kb-ingest`. This is how query results compound into the wiki
-over time — but only for knowledge worth reusing, not routine lookups. When
-operating as the `knowledge-curator` agent, the end-of-turn workflow handles this
-capture automatically.
+A genuinely new and durable synthesis the KB doesn't yet capture is worth
+writing back through **kb-ingest** — but only knowledge worth reusing, not
+routine lookups. In automatic capture mode the end-of-turn **kb-capture**
+sweep handles this; in explicit mode, the **knowledge-curator** agent does.

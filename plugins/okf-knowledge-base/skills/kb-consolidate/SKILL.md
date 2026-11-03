@@ -20,24 +20,24 @@ finds that redundancy and consolidates it so the KB gets **smaller and faster to
 search without losing any durable information**. The rule throughout: **recommend
 first, act only on what the user approves**, and never lose knowledge or leave
 broken links.
+Read `${CLAUDE_PLUGIN_ROOT}/references/knowledge-base.md` for the governing
+Raw Source Archive and Concept Page boundaries before applying this workflow.
 
 ## 1. Analyze
 
-Run the analyzer (deterministic candidate finder; you apply judgement next):
+Analysis, search, and lint use the plugin's MCP tools; pass `kb_root` =
+absolute path of the workspace `kb/` on each.
 
-```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_analyze.py" --json
-```
-
-Useful flags:
-- `--min-similarity 0.5` — raise for fewer, stronger candidates (default 0.4).
-- `--domain <slug>` — analyze within one (sub-)domain only.
-- `--min-shared-terms`, `--max-postings`, `--limit` — tuning; defaults are fine.
+Call the **kb_analyze** tool (deterministic candidate finder; you apply judgement
+next) with `kb_root`. Optional arguments:
+- `domain` — analyze within one (sub-)domain only.
+- `min_similarity: 0.5` — raise for fewer, stronger candidates (default 0.4).
+- `min_shared_terms`, `max_postings`, `limit` — tuning; defaults are fine.
 
 It returns two lists: `within_domain` groups (all members in one domain) and
 `cross_domain` groups (members spanning domains), each with the member pages, a
 Jaccard similarity range, and an estimated byte saving. It analyses the compiled
-pages only — `raw/` snapshots are never touched.
+pages only; any file in `kb/**/raw/` is outside the consolidation scope.
 
 ## 2. Judge (separate real redundancy from lookalikes)
 
@@ -73,14 +73,16 @@ For each approved item, consolidate **losslessly**:
 
 **Within-domain merge**
 1. Pick the canonical page (best title/path, most complete). Fold every *unique*
-   durable fact, example, and citation from the other pages into it. If pages
+   durable fact, example, and `sources` entry (with its footnotes) from the
+   other pages into it, and set its `generated` to your actor and now. If pages
    conflict, reconcile — never silently drop a claim.
 2. **Repoint links before deleting.** Search the whole KB for links to the pages
-   being removed and update them to the canonical page:
-   `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/kb_search.py" "<removed page title>"`
-   and grep for the old paths. Never leave a broken link.
-3. Delete the now-redundant pages, update the domain `index.md` (or run
-   `kb_lint.py --domain <d> --fix-index`) and prepend a `log.md` entry.
+   being removed and update them to the canonical page: call the **kb_search**
+   tool with `kb_root` and `query` set to the removed page's title, and grep for
+   the old paths. Never leave a broken link.
+3. Delete the now-redundant pages, update the domain `index.md` (or call the
+   **kb_lint** tool with `domain: <d>` and `fix_index: true`) and prepend a
+   `log.md` entry.
 
 **Cross-domain canonicalize**
 1. Choose the canonical home: the best-fit existing domain (match the concept
@@ -91,14 +93,14 @@ For each approved item, consolidate **losslessly**:
    stub that cross-links to it when that domain still needs a local pointer.
 3. Update every affected `index.md` and `log.md`.
 
-Raw source snapshots under `raw/` are immutable — cite them, never edit or move
-them.
+Raw Artifacts under `raw/` are user-owned and opaque. Cite them when useful, but
+never edit, move, delete, or generate archive files as part of consolidation.
 
 ## 5. Verify and report
 
-Run `kb_lint.py` over the affected domains, fix any ERRORs and index drift
-(`--fix-index`), and confirm no broken links or orphans were introduced. Then tell
-the user what changed: pages merged/removed/created, links repointed, any new
+Run the **kb_lint** tool over the affected domains, fix any ERRORs and index drift
+(`fix_index: true`), and confirm no broken links or orphans were introduced.
+Then tell the user what changed: pages merged/removed/created, links repointed, any new
 common domain, and the **actual** size reduction. Delete
 `consolidation-report.md` once its recommendations are resolved, or note what was
 deferred.
@@ -109,4 +111,4 @@ deferred.
 - Lossless: preserve every unique durable fact and all provenance/citations.
 - Repoint inbound links before removing a page; leave zero broken links.
 - Keep one concept per page; don't over-merge to chase a smaller number.
-- Never touch `raw/` snapshots.
+- Never touch `raw/` files.

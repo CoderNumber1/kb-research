@@ -1,16 +1,15 @@
 ---
 type: Domain
 title: Open Knowledge Format
-description: The Open Knowledge Format v0.1 specification — knowledge bundles, concepts, YAML frontmatter, reserved files, cross-linking, and conformance.
+description: The Open Knowledge Format v0.2 specification — knowledge bundles, concepts, YAML frontmatter, provenance/trust/lifecycle families, reserved files, cross-linking, and conformance.
 slug: okf
 tags: [okf, format, spec, frontmatter]
-status: active
-timestamp: 2026-07-18T22:19:01+00:00
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-27T05:54:02Z }
 ---
 
 # Scope
 
-The Open Knowledge Format v0.1 specification — knowledge bundles, concepts, YAML frontmatter, reserved files, cross-linking, and conformance.
+The Open Knowledge Format v0.2 specification — knowledge bundles, concepts, YAML frontmatter, provenance/trust/lifecycle families, reserved files, cross-linking, and conformance.
 
 **In scope:** _describe what belongs in this domain._
 
@@ -24,7 +23,3 @@ Reference, Metric). Add subdirectories (or nested sub-domains) as it grows._
 # Entry points
 
 _Link the most important pages here once they exist._
-
-# Sources
-
-Raw source material for this domain is snapshotted under [`raw/`](raw/index.md).

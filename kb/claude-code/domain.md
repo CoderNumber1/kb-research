@@ -4,8 +4,7 @@ title: Claude Code Platform
 description: Claude Code plugin platform — plugin.json and marketplace.json manifests, component auto-discovery, hooks, CLAUDE_PLUGIN_ROOT, and plugin install scopes.
 slug: claude-code
 tags: [claude-code, plugins, marketplace, hooks]
-status: active
-timestamp: 2026-07-18T22:19:01+00:00
+generated: { by: claude-code/claude-opus-4-8, at: 2026-07-18T22:19:01+00:00 }
 ---
 
 # Scope
@@ -24,7 +23,3 @@ Reference, Metric). Add subdirectories (or nested sub-domains) as it grows._
 # Entry points
 
 _Link the most important pages here once they exist._
-
-# Sources
-
-Raw source material for this domain is snapshotted under [`raw/`](raw/index.md).

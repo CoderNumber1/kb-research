@@ -6,29 +6,22 @@
   },
   "metadata": {
     "description": "Marketplace hosting the OKF Knowledge Base plugin.",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "plugins": [
     {
       "name": "okf-knowledge-base",
       "source": "./plugins/okf-knowledge-base",
-      "description": "Agent-operated knowledge base on the Open Knowledge Format, run as a Karpathy-style LLM wiki: initialize domains, ingest sources (auto-routed by domain description), search, and lint — with a curator agent and a working-directory KB detector. Uses bundled pure-stdlib Python scripts.",
+      "description": "Agent-operated knowledge base on the Open Knowledge Format v0.2, run as a Karpathy-style LLM wiki: bootstrap a KB with automatic or agent-driven capture, initialize domains, ingest sources (auto-routed by domain description), search, lint, and consolidate. A bundled stdlib-only Python MCP server does the deterministic work (requires python3 3.11+).",
       "category": "knowledge",
-      "keywords": ["knowledge-base", "okf", "llm-wiki", "wiki", "ingest"]
-    },
-    {
-      "name": "okf-knowledge-base-scriptless",
-      "source": "./plugins/okf-knowledge-base-scriptless",
-      "description": "Scriptless variant of okf-knowledge-base: the skills perform initialize/ingest/search/lint directly with built-in file tools — no helper scripts, no Python dependency. Install this OR another okf-knowledge-base variant, not both (they share skill names).",
-      "category": "knowledge",
-      "keywords": ["knowledge-base", "okf", "llm-wiki", "wiki", "scriptless"]
-    },
-    {
-      "name": "okf-knowledge-base-powershell",
-      "source": "./plugins/okf-knowledge-base-powershell",
-      "description": "PowerShell edition of okf-knowledge-base: the skills call bundled pwsh scripts for deterministic routing/search/lint with output identical to the Python variant. Requires PowerShell 7+. Install this OR another okf-knowledge-base variant, not both (they share skill names).",
-      "category": "knowledge",
-      "keywords": ["knowledge-base", "okf", "llm-wiki", "wiki", "powershell"]
+      "keywords": [
+        "knowledge-base",
+        "okf",
+        "llm-wiki",
+        "wiki",
+        "ingest",
+        "mcp"
+      ]
     }
   ]
 }

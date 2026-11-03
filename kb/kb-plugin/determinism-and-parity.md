@@ -1,18 +1,22 @@
 ---
 type: Reference
 title: Determinism and Python/PowerShell parity
-description: Techniques and gotchas for making the PowerShell scripts produce byte-identical JSON to the Python scripts.
-tags: [plugin, parity, powershell, determinism]
-timestamp: 2026-07-18T00:00:00Z
+description: Historical — the techniques used to make the retired PowerShell scripts emit byte-identical JSON to the retired Python scripts, and the determinism lesson that still applies.
+tags: [plugin, parity, powershell, determinism, history]
+status: deprecated
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-27T05:54:02Z }
 ---
 
-# Goal
+> **Deprecated.** The Python and PowerShell [variants](variants.md) were
+> retired on 2026-10-27. The determinism lesson below still governs the
+> [kb-mcp server](mcp-server.md); the PowerShell specifics are history.
 
-The PowerShell scripts must emit **byte-identical JSON** to the Python scripts so
-the [variants](variants.md) are interchangeable; parity tests enforce it (skipped
-where `pwsh` is absent).
+# Goal (historical)
 
-# Determinism fixes (applied to both engines)
+The PowerShell scripts had to emit **byte-identical JSON** to the Python
+scripts so the variants were interchangeable; parity tests enforced it.
+
+# Determinism fixes (still applicable)
 
 Reaching parity surfaced two real non-determinism bugs in the original Python:
 
@@ -23,7 +27,7 @@ Reaching parity surfaced two real non-determinism bugs in the original Python:
 Lesson: any output that depends on directory-walk order is non-deterministic
 across machines; add an explicit tiebreak.
 
-# PowerShell gotchas
+# PowerShell gotchas (historical)
 
 - **Empty arrays** → `ConvertTo-Json` renders an empty pipeline result as
   `[null]`; build arrays from a typed `List[T]` and return `.ToArray()`.
@@ -31,8 +35,7 @@ across machines; add an explicit tiebreak.
   via `[ordered]@{}`.
 - Emulate Python `repr()` for lint messages that use `{x!r}`.
 - Match Python's blob/token construction (field order, spacing) exactly, since
-  the [stemmer/tokenizer](scripts-and-autodetection.md) feeds similarity scores.
+  the stemmer/tokenizer feeds similarity scores.
 
-Parity is verified by diffing JSON (ignoring the absolute `kb_root`) across
-detect/search/lint/analyze and `--fix-index` file output. Back to
-[the variants](variants.md).
+Parity was verified by diffing JSON (ignoring the absolute `kb_root`) across
+detect/search/lint/analyze and `--fix-index` file output.

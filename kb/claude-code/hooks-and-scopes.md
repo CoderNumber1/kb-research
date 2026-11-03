@@ -3,7 +3,11 @@ type: Reference
 title: Plugin hooks and install scopes
 description: The SessionStart hook contract for injecting context, and the user/project/local plugin install scopes.
 tags: [claude-code, hooks, scopes, sessionstart]
-timestamp: 2026-07-18T00:00:00Z
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-27T05:54:02Z }
+sources:
+  - id: plugins-reference
+    resource: "https://code.claude.com/docs/en/plugins-reference"
+    title: Claude Code plugins reference — hooks, scopes, environment variables
 ---
 
 # Hooks
@@ -18,9 +22,9 @@ runs when a session begins; to add context, print JSON:
 ```
 
 Printing nothing contributes no context — so a detector can announce a resource
-when present and stay silent otherwise (as the
-[KB detector](/kb-plugin/scripts-and-autodetection.md) does). The command can be a
-bundled script or an inline shell one-liner.
+when present and stay silent otherwise (the KB plugin used one until its
+[MCP engine](/kb-plugin/mcp-server.md) replaced it with an instructions-file
+directive). The command can be a bundled script or an inline shell one-liner.
 
 # Install scopes
 
@@ -31,7 +35,3 @@ bundled script or an inline shell one-liner.
 | `local` | `.claude/settings.local.json` | just this project, gitignored |
 
 `claude plugin install <plugin>@<marketplace> --scope <scope>` selects it.
-
-# Citations
-
-[1] [Claude Code plugins reference — hooks, scopes, environment variables](https://code.claude.com/docs/en/plugins-reference)

@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>kb-mcp</AssemblyName>
+    <RootNamespace>KnowledgeBase.Mcp</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <Version>0.2.0</Version>
+  </PropertyGroup>
+
+  <!-- Self-contained release binaries (see src/publish.sh; not committed). -->
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
+    <PackageReference Include="ModelContextProtocol" Version="1.2.0" />
+    <PackageReference Include="YamlDotNet" Version="16.3.0" />
+  </ItemGroup>
+
+  <!-- The capture directives kb_init writes live in the plugin's references/
+       folder (one source of truth) and are compiled into the binary. -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\plugins\okf-knowledge-base\references\sentinel-automatic.md" LogicalName="sentinel-automatic.md" />
+    <EmbeddedResource Include="..\..\plugins\okf-knowledge-base\references\sentinel-search.md" LogicalName="sentinel-search.md" />
+  </ItemGroup>
+
+</Project>
