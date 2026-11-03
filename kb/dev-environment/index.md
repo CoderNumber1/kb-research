@@ -9,7 +9,4 @@ See [domain.md](domain.md) for scope and conventions.
 * [The egress proxy](egress-proxy.md) - How outbound network access is mediated in the Claude Code remote sandbox, and what that gates.
 * [Git and GitHub in the sandbox](git-and-github.md) - Pushing when the session token is read-only, the PAT workaround, why PR creation is blocked, reserved token vars, and unsigned commits.
 * [Installing tools in the sandbox](installing-tools.md) - Which download hosts the egress policy allows, and how PowerShell 7 was installed for the plugin work.
-
-# Sources
-
-* [Raw sources](raw/) - immutable snapshots of ingested material.
+* [The sandbox VM](sandbox-vm.md) - Platform facts for the Claude Code cloud session VM — architecture, OS, libc, resources, preinstalled runtimes, mounts, and session environment variables.

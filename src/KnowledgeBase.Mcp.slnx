@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="KnowledgeBase.Mcp.Tests/KnowledgeBase.Mcp.Tests.csproj" />
+  <Project Path="KnowledgeBase.Mcp/KnowledgeBase.Mcp.csproj" />
+</Solution>

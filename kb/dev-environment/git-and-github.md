@@ -3,7 +3,11 @@ type: Playbook
 title: Git and GitHub in the sandbox
 description: Pushing when the session token is read-only, the PAT workaround, why PR creation is blocked, reserved token vars, and unsigned commits.
 tags: [environment, git, github, pat]
-timestamp: 2026-07-18T00:00:00Z
+generated: { by: claude-code/claude-opus-4-8, at: 2026-07-18T00:00:00Z }
+sources:
+  - id: sandbox-proxy-readme
+    resource: file /root/.ccr/README.md in the Claude Code remote sandbox
+    title: Sandbox proxy readme
 ---
 
 # The default token is often read-only
@@ -46,7 +50,3 @@ return `403` here. Workaround: push the branch, then open the PR manually from t
 
 No signing key is available, so commits show as **Unverified** on GitHub even
 with the correct committer email. This is cosmetic; contents are intact.
-
-# Citations
-
-[1] Sandbox proxy readme: `/root/.ccr/README.md`

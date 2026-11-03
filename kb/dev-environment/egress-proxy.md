@@ -3,7 +3,11 @@ type: Reference
 title: The egress proxy
 description: How outbound network access is mediated in the Claude Code remote sandbox, and what that gates.
 tags: [environment, proxy, network, tls]
-timestamp: 2026-07-18T00:00:00Z
+generated: { by: claude-code/claude-opus-4-8, at: 2026-07-18T00:00:00Z }
+sources:
+  - id: sandbox-proxy-readme
+    resource: file /root/.ccr/README.md in the Claude Code remote sandbox
+    title: Sandbox proxy readme
 ---
 
 # How it works
@@ -26,7 +30,3 @@ Diagnose with `curl -sS "$HTTPS_PROXY/__agentproxy/status"`.
 
 Rules: never disable TLS verification, never unset `$HTTPS_PROXY`, and do not
 retry a `403`/`407` policy denial — report it.
-
-# Citations
-
-[1] Sandbox proxy readme: `/root/.ccr/README.md`

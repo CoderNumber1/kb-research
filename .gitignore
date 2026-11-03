@@ -1,3 +1,7 @@
+# .NET build and publish output (the C# server is built locally, never committed)
+src/*/bin/
+src/*/obj/
+src/publish/
+
+# Python bytecode
 __pycache__/
-*.pyc
-.pytest_cache/

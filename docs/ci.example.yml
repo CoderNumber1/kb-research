@@ -1,4 +1,4 @@
-# Example GitHub Actions workflow for this knowledge base.
+# Example GitHub Actions workflow for this repository.
 #
 # It lives here rather than in .github/workflows/ because pushing a workflow
 # file requires a token with the "Workflows" scope. To activate CI, copy this
@@ -7,7 +7,10 @@
 #
 #     cp docs/ci.example.yml .github/workflows/ci.yml
 #
-# It runs the pytest suite and lints the committed KB on every push and PR.
+# It runs the xUnit suite on every push and PR, once against the plugin's Python
+# MCP server and once against the equivalent C# server. The suite drives the
+# server over stdio and includes CommittedKnowledgeBaseIsConformant, which lints
+# the committed kb/ and fails the build on OKF conformance errors.
 
 name: CI
 
@@ -21,12 +24,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-      - name: Install dev dependencies
-        run: pip install -r requirements-dev.txt
-      - name: Run test suite
-        run: pytest
-      - name: Lint the committed knowledge base
-        run: python3 plugins/okf-knowledge-base/scripts/kb_lint.py
+          python-version: "3.11"   # the plugin's minimum
+      - name: Test the Python server (what the plugin ships)
+        run: dotnet test src/KnowledgeBase.Mcp.Tests -c Release
+        env:
+          KB_MCP_SERVER: python
+      - name: Test the C# server
+        run: dotnet test src/KnowledgeBase.Mcp.Tests -c Release
